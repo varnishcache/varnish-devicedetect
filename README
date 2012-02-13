@@ -1,0 +1,17 @@
+Device detection in Varnish
+===========================
+
+The goal of this VCL set is to provide a simple & easy way of getting
+device detection going in Varnish. (http://www.varnish-cache.org)
+
+Specific problems that should be adressed:
+* desktop versions get the usual page.
+* mobile clients should get the tiny version.
+* ipad users should get a tablet-adjusted page.
+
+
+
+
+This project lives on Github: http://github.com/lkarsten/varnish-devicedetect/
+Authored by Lasse Karstensen <lasse@varnish-software.com>.
+
