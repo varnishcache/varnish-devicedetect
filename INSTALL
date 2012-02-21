@@ -8,13 +8,13 @@ include "devicedetect.vcl";
 sub vcl_recv {
     # only do device detection on non-static content.
     if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
-        detectdevice;
+        call detectdevice;
     }
 }
 
 sub vcl_hash {
     # add the device classification to the hash, so clients get the correct cached object
-    if (req.http.X-hash-input) set req.hash += req.http.X-hash-input;
+    if (req.http.X-hash-input) { hash_data(req.http.X-hash-input); }
 }
 """
 

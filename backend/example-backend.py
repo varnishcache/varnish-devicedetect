@@ -8,7 +8,7 @@ from pprint import pformat
 import datetime
 
 HEAD_CONTENT="""<html><body><h1>Device Detection test backend</h1>
-<p>This is a test backend/web server for device detection. It will tell you what kind of device your client is recognized as, if set. By default it will just give you the contents of the X-UA-Device header, if set.</p>
+<p>This is a test backend/web server for device detection. It will tell you what kind of device your client is recognized as by Varnish, typically by outputting the contents of the X-UA-Device header.</p>
 <p>All content is in /devicetest/, and the backend will redirect you if you access /.</p>
 """
 TAIL_CONTENT="""
