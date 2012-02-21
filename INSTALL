@@ -18,19 +18,26 @@ sub vcl_hash {
 }
 """
 
-To enable URLs for setting override cookies for testing, add::
+When testing backends you can also add the following include:
 """
-sub vcl_recv {
-    if (req.url ~ "^/set_devicetype/") { error 701 regsub(req.url, "^/set_devicetype/", ""); }
-}
+include "devicedetect.vcl";
+"""
 
-sub vcl_error { 
-    if (obj.status == 701 ) {
-        # obj.response == mobile-generic
-        set obj.http.Set-Cookie = "X-UA-device=" + obj.response;
-        set obj.http.Content-Type = "text/plain; charset=utf-8";
-        synthetic {" 200 OK, Cookie set "};
-	return(deliver)
-    }
-}
-"""
+This will create the /set_ua_device/ URL which you can use to override the contents of X-UA-Device into the
+backend. 
+
+Example: enable devicedetection, go to /set_ua_device/mobile-iphone . Afterwards, access your site as usual. The backend will now think that your browser is an iphone, and if configured to it, output different content.
+
+There is an example web server in backend/ that runs on port 8000 and replies differently depending on X-UA-Device. Run
+it with:
+
+    cd backend
+    ./example_backend.py
+
+Now you can access it through:
+   
+    http://localhost:8000/devicetest/ 
+    OR
+    http://localhost:6081/devicetest/ # exchange 6081 for your varnish listening port.
+
+Happy devicedetecting.
