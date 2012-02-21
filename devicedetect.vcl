@@ -6,6 +6,7 @@
 
 sub devicedetect {
     unset req.http.X-hash-input;
+    unset req.http.X-UA-Device;
     set req.http.X-UA-Device = "pc";
 
     if    (req.http.User-Agent ~ "(?i)ip(hone|od)") { set req.http.X-UA-Device = "mobile-iphone"; }
@@ -54,20 +55,11 @@ sub devicedetect {
     }
 
     # handle overrides
-    if (req.http.Cookie ~ "X-force-UA") {
-        set req.http.X-UA-Device = regsub(req.http.Cookie, "X-force-UA=(.+);", "\1");
+    if (req.http.Cookie ~ "(i?)X-UA-Device-force") {
+        # ;?? means zero or one ;, non-greedy to match the first.
+        set req.http.X-UA-Device = regsub(req.http.Cookie, "(?i).*X-UA-Device-force=([^;]+);??.*", "\1");
     }
-    #(req.http.Cookie ~ "X-force-UA=mobile-generic") set req.http.X-UA-Device = "mobile-generic";
-    #if (req.url ~ "force-ua-device=mobile-android$") { set req.http.X-UA-Device = "mobile-android"; }
-    #elsif (req.url ~ "force-ua-device=mobile-ipad$") { set req.http.X-UA-Device = "mobile-ipad"; }
-    #elsif (req.url ~ "force-ua-device=mobile-iphone$") { set req.http.X-UA-Device = "mobile-iphone"; }
-    #elsif (req.url ~ "force-ua-device=mobile-generic$") { set req.http.X-UA-Device = "mobile-generic"; }
-    #elsif (req.url ~ "force-ua-device=pc-forced$") { set req.http.X-UA-Device = "pc-forced"; }
-
-    # XXX: why?
-    #if (req.http.X-UA-Device != "pc" && req.http.X-UA-Device != "pc-forced") {
     set req.http.X-hash-input = req.http.X-UA-Device;
-    #}
 }
 
 # vim: sw=4:tw=120 # meh
