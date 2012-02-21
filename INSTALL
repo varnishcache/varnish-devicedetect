@@ -1,0 +1,36 @@
+Install and configure
+=====================
+
+Add the following to your VCL to enable classification::
+
+"""
+include "devicedetect.vcl";
+sub vcl_recv {
+    # only do device detection on non-static content.
+    if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
+        detectdevice;
+    }
+}
+
+sub vcl_hash {
+    # add the device classification to the hash, so clients get the correct cached object
+    if (req.http.X-hash-input) set req.hash += req.http.X-hash-input;
+}
+"""
+
+To enable URLs for setting override cookies for testing, add::
+"""
+sub vcl_recv {
+    if (req.url ~ "^/set_devicetype/") { error 701 regsub(req.url, "^/set_devicetype/", ""); }
+}
+
+sub vcl_error { 
+    if (obj.status == 701 ) {
+        # obj.response == mobile-generic
+        set obj.http.Set-Cookie = "X-UA-device=" + obj.response;
+        set obj.http.Content-Type = "text/plain; charset=utf-8";
+        synthetic {" 200 OK, Cookie set "};
+	return(deliver)
+    }
+}
+"""
