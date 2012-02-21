@@ -5,6 +5,7 @@
 #
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from pprint import pformat
+import datetime
 
 HEAD_CONTENT="""<html><body><h1>Device Detection test backend</h1>
 <p>This is a test backend/web server for device detection. It will tell you what kind of device your client is recognized as, if set. By default it will just give you the contents of the X-UA-Device header, if set.</p>
@@ -17,7 +18,7 @@ TAIL_CONTENT="""
 <li><a href="/set_ua_device/mobile-iphone">mobile-iphone</a><br/>
 </ul>
 </body></html>
-"""
+""" 
 
 class requesthandler(BaseHTTPRequestHandler):
     # http://docs.python.org/library/basehttpserver.html#BaseHTTPServer.BaseHTTPRequestHandler
@@ -33,17 +34,18 @@ class requesthandler(BaseHTTPRequestHandler):
             self.wfile.write("Only root-URL is defined")
             return
         self.send_response(200, "OK")
-        self.send_header("Cache-Control", "max-age=0")
+        self.send_header("Expires", "Fri, 30 Oct 1998 14:19:41 GMT")
         self.send_header("Content-Type", "text/html")
         self.end_headers()
         self.wfile.write(HEAD_CONTENT)
         
         if not self.headers.get("X-UA-Device"):
-            self.wfile.write("<strong>Your request does not not have a X-UA-Device header set.</strong>")
+            self.wfile.write("<strong>Your request does not have a X-UA-Device header set.</strong>")
         else:
-            _s = "<strong>Your X-UA-Device header is: %s</strong>" % self.headers.get("X-UA-Device")
+            _s = "<strong>Your X-UA-Device header is: %s</strong>" % self.headers.get("X-UA-Device", "")
             self.wfile.write(_s)
         self.wfile.write("<p>Complete header set:</p><pre>%s</pre>" % pformat(self.headers.items()))
+        self.wfile.write("<p>This page was generated %s.</p>" % (datetime.datetime.now().isoformat()))
         self.wfile.write(TAIL_CONTENT)
 
 def main():
