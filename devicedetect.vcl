@@ -8,7 +8,6 @@ sub devicedetect {
     unset req.http.X-hash-input;
     set req.http.X-UA-Device = "pc";
 
-#if (req.http.User-Agent ~ "(LG-|LG\/|WindowsCE|IEMobile|Nokia|SymbianOS|SonyEricsson|iPhone|iPod|Opera Mini|Opera Mobi|Android.*Mobile|BlackBerry|HTC_Touch|Samsung.*Bada|MIDP-|Googlebot-Mobile)" && !req.http.Cookie ~ "redirect_mobile=false") { }
     if    (req.http.User-Agent ~ "(?i)ip(hone|od)") { set req.http.X-UA-Device = "mobile-iphone"; }
     elsif (req.http.User-Agent ~ "(?i)ipad")        { set req.http.X-UA-Device = "tablet-ipad"; }
     # how do we differ between an android phone and an android tablet?
