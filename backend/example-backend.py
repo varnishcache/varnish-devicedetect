@@ -12,10 +12,15 @@ HEAD_CONTENT="""<html><body><h1>Device Detection test backend</h1>
 <p>All content is in /devicetest/, and the backend will redirect you if you access /.</p>
 """
 TAIL_CONTENT="""
-<p>If you are accessing this backend through Varnish, and have the override URLs activacted, you can change the active URL with the following links. They are not defined on the backend and will as such give you 404 without Varnish.</p>
+<p>If you are accessing this backend through Varnish, and have the override URLs activated, you can change the active URL with the following links. They are not defined on the backend and will as such give you 404 without Varnish.</p>
 <ul>
-<li><a href="/set_ua_device/mobile-generic">mobile-generic</a>
 <li><a href="/set_ua_device/mobile-iphone">mobile-iphone</a><br/>
+<li><a href="/set_ua_device/tablet-ipad">tablet-ipad</a><br/>
+<li><a href="/set_ua_device/mobile-android">mobile-android</a>
+<li><a href="/set_ua_device/tablet-android">tablet-android</a><br/>
+<li><a href="/set_ua_device/mobile-smartphone">mobile-smartphone</a><br/>
+<li><a href="/set_ua_device/mobile-generic">mobile-generic</a><br/>
+<li><a href="/set_ua_device/">unset override cookie</a><br/>
 </ul>
 </body></html>
 """ 
