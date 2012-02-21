@@ -23,7 +23,7 @@ sub devicedetect {
         req.http.User-Agent ~ "BlackBerry" ||
         req.http.User-Agent ~ "SymbianOS.*AppleWebKit" ||
         req.http.User-Agent ~ "Opera Mobi") {
-        set req.http.X-VG-Device = "mobile-smartphone";
+        set req.http.X-UA-Device = "mobile-smartphone";
     }
     elsif (req.http.User-Agent ~ "(?i)symbian" ||
         req.http.User-Agent ~ "(?i)^sonyericsson" ||
