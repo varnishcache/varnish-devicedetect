@@ -4,6 +4,7 @@
 # consideration when producing content.
 #
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from pprint import pformat
 
 HEAD_CONTENT="""<html><body><h1>Device Detection test backend</h1>
 <p>This is a test backend/web server for device detection. It will tell you what kind of device your client is recognized as, if set. By default it will just give you the contents of the X-UA-Device header, if set.</p>
@@ -35,16 +36,15 @@ class requesthandler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "max-age=0")
         self.send_header("Content-Type", "text/html")
         self.end_headers()
+        self.wfile.write(HEAD_CONTENT)
+        
         if not self.headers.get("X-UA-Device"):
-            self.wfile.write(HEAD_CONTENT)
             self.wfile.write("<strong>Your request does not not have a X-UA-Device header set.</strong>")
-            self.wfile.write(TAIL_CONTENT)
         else:
-            self.wfile.write(HEAD_CONTENT)
-            _s = "<strong>Your X-UA-Device header is: %s</strong>" % \
-                self.headers.get("X-UA-Device")
+            _s = "<strong>Your X-UA-Device header is: %s</strong>" % self.headers.get("X-UA-Device")
             self.wfile.write(_s)
-            self.wfile.write(TAIL_CONTENT)
+        self.wfile.write("<p>Complete header set:</p><pre>%s</pre>" % pformat(self.headers.items()))
+        self.wfile.write(TAIL_CONTENT)
 
 def main():
     server_address = ('', 8000)
