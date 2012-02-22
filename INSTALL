@@ -25,6 +25,32 @@ sub vcl_hash {
 This will make a different set of cache objects based on what the client is identified as.
 
 
+Different backend for mobile clients
+------------------------------------
+
+If you have a different backend that serves pages for mobile clients, or any special needs
+in VCL, you can use the X-UA-Device header like this:
+
+"""
+include "devicedetect.vcl";
+
+backend mobile {
+    .host = "10.0.0.1";
+    .port = "80";
+}
+
+sub vcl_recv {
+    # only do device detection on non-static content.
+    if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
+        call detectdevice;
+    }
+
+    if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
+        set req.backend = mobile;
+    }
+}
+"""
+
 Redirecting mobile clients
 --------------------------
 
@@ -38,7 +64,7 @@ sub vcl_recv {
     }
 
     if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
-        error 750 "Moved Teporarily";
+        error 750 "Moved Temporarily";
     }
 }
  
