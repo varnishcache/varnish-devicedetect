@@ -54,7 +54,7 @@ class requesthandler(BaseHTTPRequestHandler):
         self.wfile.write(TAIL_CONTENT)
 
 def main():
-    server_address = ('', 8000)
+    server_address = ('', 5911)
     httpd = HTTPServer(server_address, requesthandler)
     httpd.serve_forever()
 

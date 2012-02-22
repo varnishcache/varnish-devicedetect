@@ -93,7 +93,7 @@ which is sent to the backend. (and used for cache lookups)
 Example: enable devicedetection, go to /set_ua_device/mobile-iphone . Afterwards, access your site as usual. You will now
 get the content as if your browser was an iPhone. Watch out for the TTL settings.
 
-There is an example web server in backend/ that listens on port 8000 and replies
+There is an example web server in backend/ that listens on port 5911 and replies
 differently depending on X-UA-Device. Run it with:
 
     cd backend
@@ -101,7 +101,7 @@ differently depending on X-UA-Device. Run it with:
 
 Now you can access it through:
    
-    http://localhost:8000/devicetest/ 
+    http://localhost:5911/devicetest/ 
     OR
     http://localhost:6081/devicetest/ # exchange 6081 for your varnish listening port.
 

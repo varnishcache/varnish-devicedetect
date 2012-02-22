@@ -6,7 +6,7 @@
 
 backend devicetest { 
     .host = "127.0.0.1";
-    .port = "8000";
+    .port = "5911";
 }
 
 sub vcl_recv {
