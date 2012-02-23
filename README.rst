@@ -4,14 +4,14 @@ Device detection in Varnish
 The goal of this VCL set is to provide a simple & easy way of getting
 device detection going in Varnish Cache. (http://www.varnish-cache.org)
 
-Specific problems that is adressed:
+Specific problems we want to solve:
 
 1) detect the most common and easily detected (mobile/tablet) platforms.
 2) provide example VCL for using devicedetect.vcl with your existing VCL.
 
 These are explicit not goals for this project:
 
-* Create a comprehensive set of capabilities per client. We don't want to spend a lot of effort.
+* Create a comprehensive set of capabilities per client. We don't want to spend a lot of effort on maintenance.
 * Be perfect. It usually works, but if you need guarantees you should consider the commercial offerings instead.
 
 This project is maintained and updated by the community. If you see any 
@@ -50,11 +50,14 @@ Similar efforts
 
 These similar efforts for User-Agent insights are known to us:
 
-http://deviceatlas.com/ (commercial)
-http://openddr.org/ (free)
+* http://deviceatlas.com/ (commercial)
+* http://openddr.org/ (free)
 
-Varnish Software has a commerical offering for Deviceatlas lookup VMOD. 
-There is an open source project for using OpenDDR in Varnish: https://github.com/TheWeatherChannel/dClass . 
+Varnish Software has a commerical offering for Deviceatlas lookup VMOD. Contact sales@varnish-software.com. 
+
+There is an open source project for using OpenDDR in Varnish: 
+
+    https://github.com/TheWeatherChannel/dClass 
 
 
 Contact
