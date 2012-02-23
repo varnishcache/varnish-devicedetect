@@ -11,7 +11,7 @@ include "devicedetect.vcl";
 sub vcl_recv {
     # only do device detection on non-static content.
     if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
-        call detectdevice;
+        call devicedetect;
     }
 }
 
@@ -41,7 +41,7 @@ backend mobile {
 sub vcl_recv {
     # only do device detection on non-static content.
     if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
-        call detectdevice;
+        call devicedetect;
     }
 
     if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
@@ -59,7 +59,7 @@ include "devicedetect.vcl";
 sub vcl_recv {
     # only do device detection on non-static content.
     if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
-        call detectdevice;
+        call devicedetect;
     }
 
     if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
