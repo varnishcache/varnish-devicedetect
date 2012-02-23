@@ -60,6 +60,11 @@ There is an open source project for using OpenDDR in Varnish:
     https://github.com/TheWeatherChannel/dClass 
 
 
+Less complete but still useful resources:
+
+* https://github.com/codefuze/js-mobile-tablet-redirect
+
+
 Contact
 -------
 
