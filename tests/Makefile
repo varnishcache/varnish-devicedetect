@@ -1,8 +1,8 @@
 TESTS=*vtc
 
-.PHONY: $(TESTS)
+all: $(TESTS)
+
+.PHONY: all $(TESTS)
 
 *.vtc:
-	/usr/bin/varnishtest -Dvarnishd=/usr/sbin/varnishd -Dprojectdir=$(pwd) $@
-
-
+	/usr/bin/varnishtest -Dvarnishd=/usr/sbin/varnishd -Dprojectdir=$(PWD) $@
