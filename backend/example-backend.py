@@ -28,6 +28,10 @@ TAIL_CONTENT="""
 class requesthandler(BaseHTTPRequestHandler):
     # http://docs.python.org/library/basehttpserver.html#BaseHTTPServer.BaseHTTPRequestHandler
     def do_GET(self): 
+        # remove any GET-args
+        if "?" in self.path:
+            self.path = self.path[0:self.path.index("?")]
+
         if self.path == "/":
             self.send_response(302, "Moved temporarily")
             self.send_header("Location", "/devicetest/")
