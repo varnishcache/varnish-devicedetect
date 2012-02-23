@@ -14,6 +14,8 @@ sub devicedetect {
     # how do we differ between an android phone and an android tablet?
     # http://stackoverflow.com/questions/5341637/how-do-detect-android-tablets-in-general-useragent
     elsif (req.http.User-Agent ~ "(?i)android.*(mobile|mini)") { set req.http.X-UA-Device = "mobile-android"; }       
+    # android 3/honeycomb was just about tablet-only, and any phones will probably handle a bigger page layout.
+    elsif (req.http.User-Agent ~ "(?i)android 3")              { set req.http.X-UA-Device = "tablet-android"; }
     # may very well give false positives towards android tablets. Suggestions welcome.
     elsif (req.http.User-Agent ~ "(?i)android")         { set req.http.X-UA-Device = "tablet-android"; }
 
