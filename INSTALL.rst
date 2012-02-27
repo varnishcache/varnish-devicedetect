@@ -8,10 +8,8 @@ Serve the different content on the same URL
 To serve different content based on the device type, add the following VCL::
 
     include "devicedetect.vcl";
-    sub vcl_recv {
-        call devicedetect;
-    }
 
+    sub vcl_recv { call devicedetect; }
     sub vcl_hash {
         # add the device classification to the hash, so clients get the correct cached object
         if (req.http.X-hash-input) { hash_data(req.http.X-hash-input); }
@@ -68,16 +66,46 @@ Signaling device type to the backend
 Except where redirection is used, the backend needs to be told what kind of 
 client the content is meant to be served to.
 
-** Example 1: 
+Example 1: Send HTTP header to backend
+''''''''''''''''''''''''''''''''''''''
+
 The basic case is that Varnish add the X-UA-Device HTTP header on the 
 backend requests, and the backend mentions in the response Vary header that the
 content is dependant on this header. Everything works out of the box from 
 Varnish's perspective.
 
-** Example 2: Override the User-Agent string sent
+Example VCL::
 
-If you do not have full control, but can access the User-Agent string (think the basic set of headers available by default for CGI scripts), you can change it
-into the device type.
+    include "devicedetect.vcl";
+    sub vcl_recv { call devicedetect; }
+
+    sub add_x-ua-device {
+        if (req.http.X-UA-Device) { 
+            set bereq.http.X-UA-Device = req.http.X-UA-Device; }
+    }
+    
+    # This must be done in vcl_miss and vcl_pass, before any backend request is
+    # actually sent. vcl_fetch runs after the request to the backend has
+    # completed.
+    sub vcl_miss { call add_x-ua-device; }
+    sub vcl_pass { call add_x-ua-device; }
+
+Please remember that the backend must send a Vary header on User-Agent, or you will need to add that manually. See below for an example.
+
+
+Example 2: Normalize the User-Agent string
+''''''''''''''''''''''''''''''''''''''''''
+
+Another way of signaling the device type is to override or normalize the
+User-Agent header sent to the backend::
+
+    User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1
+    ->
+    User-Agent: mobile-android
+
+This works if you don't need the original header for anything. A possible use
+for this is for CGI scripts where only a small set of predefined headers are
+(by default) available for the script.
 
 To make sure that any caches out on the Internet doesn't cache it, a Vary header
 on User-Agent must be added on the way out.
@@ -96,10 +124,12 @@ VCL code::
         }
     }
 
-** Example 3: Add the device class as a GET query parameter
+Example 3: Add the device class as a GET query parameter
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 If everything else fails, you can add the device type as a GET argument. 
-http://example.com/article/1234.html -> http://example.com/article/1234.html?devicetype=mobile-iphone
+
+    http://example.com/article/1234.html --> http://example.com/article/1234.html?devicetype=mobile-iphone
 
 The same Vary trickery from Example 2 must be added here also.
 
