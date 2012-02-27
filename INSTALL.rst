@@ -9,10 +9,7 @@ To serve different content based on the device type, add the following VCL::
 """
 include "devicedetect.vcl";
 sub vcl_recv {
-    # only do device detection on non-static content.
-    if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
-        call devicedetect;
-    }
+    call devicedetect;
 }
 
 sub vcl_hash {
@@ -39,11 +36,7 @@ backend mobile {
 }
 
 sub vcl_recv {
-    # only do device detection on non-static content.
-    if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
-        call devicedetect;
-    }
-
+    call devicedetect;
     if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
         set req.backend = mobile;
     }
@@ -57,11 +50,7 @@ If you want to redirect mobile clients instead, you can use::
 """
 include "devicedetect.vcl";
 sub vcl_recv {
-    # only do device detection on non-static content.
-    if (!req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|txt|gz|zip|lzma|bz2|tgz|tbz|html|htm)(\?.*|)$") {
-        call devicedetect;
-    }
-
+    call devicedetect;
     if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
         error 750 "Moved Temporarily";
     }
