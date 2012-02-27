@@ -185,12 +185,12 @@ Afterwards, access your site as usual. You will now get the content as if your
 browser was an iPhone. Watch out for the TTL settings.
 
 There is an example web server in backend/ that listens on port 5911 and replies
-differently depending on X-UA-Device. Run it with:
+differently depending on X-UA-Device. Run it with::
 
     cd backend
     ./example_backend.py
 
-Now you can access it through:
+Now you can access it through::
    
     http://localhost:5911/devicetest/ , or
     http://localhost:6081/devicetest/ # Change 6081 into your Varnish listening port.
