@@ -40,7 +40,7 @@ class requesthandler(BaseHTTPRequestHandler):
         elif self.path != "/devicetest/":
             self.send_error(404, "Not found")
             self.end_headers()
-            self.wfile.write("Only root-URL is defined")
+            self.wfile.write("Only / and /devicetest/ are valid URLs")
             return
         self.send_response(200, "OK")
         self.send_header("Expires", "Fri, 30 Oct 1998 14:19:41 GMT")
