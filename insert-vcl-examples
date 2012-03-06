@@ -21,5 +21,6 @@ transform() {
 }
 
 transform 065-redir-mobile
+transform 071-example1
 transform 072-example2
 transform 073-example3
