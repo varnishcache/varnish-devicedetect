@@ -73,16 +73,21 @@ Example 2: Normalize the User-Agent string
 ''''''''''''''''''''''''''''''''''''''''''
 
 Another way of signaling the device type is to override or normalize the
-User-Agent header sent to the backend:
+User-Agent header sent to the backend.
 
-    User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 --> User-Agent: mobile-android
+For example
 
-This works if you don't need the original header for anything. A possible use
-for this is for CGI scripts where only a small set of predefined headers are
-(by default) available for the script.
+    User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1
 
-To make sure that any caches out on the Internet doesn't cache it, a Vary header
-on User-Agent must be added on the way out.
+becomes:
+
+    User-Agent: mobile-android
+
+when seen by the backend.
+
+This works if you don't need the original header for anything on the backend. A
+possible use for this is for CGI scripts where only a small set of predefined
+headers are (by default) available for the script.
 
 .. 072-example2-start
 VCL::
@@ -121,7 +126,6 @@ If everything else fails, you can add the device type as a GET argument.
     http://example.com/article/1234.html --> http://example.com/article/1234.html?devicetype=mobile-iphone
 
 The client itself does not see this classification, only the backend request is changed.
-
 
 .. 073-example3-start
 VCL::
@@ -163,7 +167,8 @@ VCL::
 Different backend for mobile clients
 ------------------------------------
 
-If you have a different backend that serves pages for mobile clients, or any special needs in VCL, you can use the X-UA-Device header like this::
+If you have a different backend that serves pages for mobile clients, or any
+special needs in VCL, you can use the X-UA-Device header like this::
 
     include "devicedetect.vcl";
 
@@ -206,7 +211,6 @@ VCL::
     }
 
 .. 065-redir-mobile-end
-
 
 
 Testing tools
