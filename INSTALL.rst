@@ -41,7 +41,10 @@ If you have a different backend that serves pages for mobile clients, or any spe
 Redirecting mobile clients
 --------------------------
 
-If you want to redirect mobile clients instead, you can use::
+If you want to redirect mobile clients you can use the following snippet.
+
+... 065-redir-mobile-start
+VCL::
 
     include "devicedetect.vcl";
     sub vcl_recv {
@@ -59,6 +62,7 @@ If you want to redirect mobile clients instead, you can use::
             return(deliver);
         }
     }
+... 065-redir-mobile-end
 
 Signaling device type to the backend
 ------------------------------------
