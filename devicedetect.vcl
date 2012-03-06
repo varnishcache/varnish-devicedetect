@@ -5,7 +5,6 @@
 # Author: Lasse Karstensen <lasse@varnish-software.com>
 
 sub devicedetect {
-    unset req.http.X-hash-input;
     unset req.http.X-UA-Device;
     set req.http.X-UA-Device = "pc";
 
@@ -61,7 +60,6 @@ sub devicedetect {
         # ;?? means zero or one ;, non-greedy to match the first.
         set req.http.X-UA-Device = regsub(req.http.Cookie, "(?i).*X-UA-Device-force=([^;]+);??.*", "\1");
     }
-    set req.http.X-hash-input = req.http.X-UA-Device;
 }
 
 # vim: sw=4:tw=120 # meh
