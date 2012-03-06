@@ -1,0 +1,50 @@
+varnishtest "Test varnish-devicedetect"
+
+server s1 {
+       rxreq
+       txresp
+} -start
+
+varnish v1 -vcl+backend {
+    include "${projectdir}/../devicedetect.vcl";
+    sub vcl_recv { 
+        call devicedetect; 
+        if ((req.http.X-UA-Device) && (req.request == "GET")) {
+            # if there are existing GET arguments;
+            if (req.url ~ "\?") {
+                set req.http.X-get-devicetype = "&devicetype=" + req.http.X-UA-Device;
+            } else { 
+                set req.http.X-get-devicetype = "?devicetype=" + req.http.X-UA-Device;
+            }
+            set req.url = req.url + req.http.X-get-devicetype;
+            unset req.http.X-get-devicetype;
+        }
+    }
+
+    # rewrite the response from the backend
+    sub vcl_fetch {
+        if (req.http.X-UA-Device) {
+            if (beresp.http.Vary) { set beresp.http.Vary = beresp.http.Vary + ", User-Agent"; }
+            else { set beresp.http.Vary = "User-Agent"; }
+            # if the backend returns a redirect (think missing trailing slash), we
+            # will potentially show the extra argument to the client. we don't want
+            # that.
+            # if the backend reorders the GET parameters, you may need to be smarter here. (? and & ordering)
+            if (beresp.status == 301 || beresp.status == 302 || beresp.status == 303) {
+                set beresp.http.location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
+            }
+
+            # comment this out if you don't want the client to know your classification
+            set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        }
+    }
+
+} -start
+
+client c1 {
+	txreq -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" 
+	rxresp
+	expect resp.http.X-UA-Device == "mobile-android"
+}
+
+client c1 -run
