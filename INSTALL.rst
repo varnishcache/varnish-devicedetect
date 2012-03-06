@@ -26,22 +26,47 @@ content is dependant on this header.
 Everything works out of the box from Varnish' perspective.
 
 .. 071-example1-start
-Example VCL::
+VCL::
 
     include "devicedetect.vcl";
     sub vcl_recv { call devicedetect; }
 
-    sub add_x-ua-device {
+    sub append_ua_device {
         if (req.http.X-UA-Device) { 
             set bereq.http.X-UA-Device = req.http.X-UA-Device; }
     }
-    
+
     # This must be done in vcl_miss and vcl_pass, before any backend request is
     # actually sent. vcl_fetch runs after the request to the backend has
     # completed.
-    sub vcl_miss { call add_x-ua-device; }
-    sub vcl_pass { call add_x-ua-device; }
+    sub vcl_miss { call append_ua_device; }
+    sub vcl_pass { call append_ua_device; }
 
+    # so, this is a bit conterintuitive. The backend creates content based on the normalized User-Agent,
+    # but we use Vary on X-UA-Device so Varnish will use the same cached object for all U-As that map to
+    # the same X-UA-Device.
+    # If the backend does not mention in Vary that it has crafted special
+    # content based on the User-Agent (==X-UA-Device), add it.
+    # If your backend does set Vary: User-Agent, you may have to remove that here.
+    sub vcl_fetch {
+        if (req.http.X-UA-Device) {
+            if (!beresp.http.Vary) { # no Vary at all
+                set beresp.http.Vary = "X-UA-Device"; 
+            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
+                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device"; 
+            } 
+        }
+        # comment this out if you don't want the client to know your classification
+        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+    }
+
+    # to keep any caches in the wild from serving wrong content to client #2 behind them, we need to
+    # transform the Vary on the way out.
+    sub vcl_deliver {
+        if ((req.http.X-UA-Device) && (resp.http.Vary)) {
+            set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
+        }
+    }
 .. 071-example1-end
 
 Example 2: Normalize the User-Agent string
@@ -68,6 +93,23 @@ VCL::
     # override the header before it is sent to the backend
     sub vcl_miss { if (req.http.X-UA-Device) { set bereq.http.User-Agent = req.http.X-UA-Device; } }
     sub vcl_pass { if (req.http.X-UA-Device) { set bereq.http.User-Agent = req.http.X-UA-Device; } }
+
+    # standard Vary handling code from previous examples.
+    sub vcl_fetch {
+        if (req.http.X-UA-Device) {
+            if (!beresp.http.Vary) { # no Vary at all
+                set beresp.http.Vary = "X-UA-Device";
+            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
+                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
+            }
+        }
+        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+    }
+    sub vcl_deliver {
+        if ((req.http.X-UA-Device) && (resp.http.Vary)) {
+            set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
+        }
+    }
 
 .. 072-example2-end
 
@@ -99,21 +141,20 @@ VCL::
         }
     }
 
-    # rewrite the response from the backend
+    # standard Vary handling code from previous examples.
     sub vcl_fetch {
         if (req.http.X-UA-Device) {
-            if (beresp.http.Vary) { set beresp.http.Vary = beresp.http.Vary + ", User-Agent"; }
-            else { set beresp.http.Vary = "User-Agent"; }
-            # if the backend returns a redirect (think missing trailing slash), we
-            # will potentially show the extra argument to the client. we don't want
-            # that.
-            # if the backend reorders the GET parameters, you may need to be smarter here. (? and & ordering)
-            if (beresp.status == 301 || beresp.status == 302 || beresp.status == 303) {
-                set beresp.http.location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
+            if (!beresp.http.Vary) { # no Vary at all
+                set beresp.http.Vary = "X-UA-Device";
+            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
+                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
             }
-
-            # comment this out if you don't want the client to know your classification
-            set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        }
+        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+    }
+    sub vcl_deliver {
+        if ((req.http.X-UA-Device) && (resp.http.Vary)) {
+            set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
         }
     }
 
