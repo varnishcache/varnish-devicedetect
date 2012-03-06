@@ -57,11 +57,12 @@ VCL::
      
     sub vcl_error {
         if (obj.status == 750) {
-            set obj.http.Location = "http://m.example.com/";
+            set obj.http.Location = "http://m.example.com" + req.url;
             set obj.status = 302;
             return(deliver);
         }
     }
+
 ... 065-redir-mobile-end
 
 Signaling device type to the backend
