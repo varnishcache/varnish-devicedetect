@@ -43,7 +43,7 @@ Redirecting mobile clients
 
 If you want to redirect mobile clients you can use the following snippet.
 
-... 065-redir-mobile-start
+.. 065-redir-mobile-start
 VCL::
 
     include "devicedetect.vcl";
@@ -63,7 +63,7 @@ VCL::
         }
     }
 
-... 065-redir-mobile-end
+.. 065-redir-mobile-end
 
 Signaling device type to the backend
 ------------------------------------
@@ -79,7 +79,7 @@ backend requests, and the backend mentions in the response Vary header that the
 content is dependant on this header. Everything works out of the box from 
 Varnish's perspective.
 
-... 071-example1-start
+.. 071-example1-start
 Example VCL::
 
     include "devicedetect.vcl";
@@ -95,7 +95,7 @@ Example VCL::
     # completed.
     sub vcl_miss { call add_x-ua-device; }
     sub vcl_pass { call add_x-ua-device; }
-... 071-example1-end
+.. 071-example1-end
 
 Please remember that the backend must send a Vary header on User-Agent, or you will need to add that manually. See below for an example.
 
@@ -117,7 +117,7 @@ for this is for CGI scripts where only a small set of predefined headers are
 To make sure that any caches out on the Internet doesn't cache it, a Vary header
 on User-Agent must be added on the way out.
 
-... 072-example2-start
+.. 072-example2-start
 VCL::
 
     include "devicedetect.vcl";
@@ -155,7 +155,7 @@ VCL::
     }
 
 
-... 072-example2-end
+.. 072-example2-end
 
 Example 3: Add the device class as a GET query parameter
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -166,7 +166,7 @@ If everything else fails, you can add the device type as a GET argument.
 
 The same Vary trickery from Example 2 must be added here also.
 
-... 073-example3-start
+.. 073-example3-start
 VCL::
 
     include "devicedetect.vcl";
@@ -202,7 +202,7 @@ VCL::
         }
     }
 
-... 073-example3-end
+.. 073-example3-end
 
 
 Testing tools
