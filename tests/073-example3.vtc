@@ -21,21 +21,20 @@ varnish v1 -vcl+backend {
         }
     }
 
-    # rewrite the response from the backend
+    # standard Vary handling code from previous examples.
     sub vcl_fetch {
         if (req.http.X-UA-Device) {
-            if (beresp.http.Vary) { set beresp.http.Vary = beresp.http.Vary + ", User-Agent"; }
-            else { set beresp.http.Vary = "User-Agent"; }
-            # if the backend returns a redirect (think missing trailing slash), we
-            # will potentially show the extra argument to the client. we don't want
-            # that.
-            # if the backend reorders the GET parameters, you may need to be smarter here. (? and & ordering)
-            if (beresp.status == 301 || beresp.status == 302 || beresp.status == 303) {
-                set beresp.http.location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
+            if (!beresp.http.Vary) { # no Vary at all
+                set beresp.http.Vary = "X-UA-Device";
+            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
+                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
             }
-
-            # comment this out if you don't want the client to know your classification
-            set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        }
+        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+    }
+    sub vcl_deliver {
+        if ((req.http.X-UA-Device) && (resp.http.Vary)) {
+            set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
         }
     }
 
