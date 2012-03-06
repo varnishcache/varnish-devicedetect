@@ -3,19 +3,21 @@
 # To make sure the example VCL code is valid and runnable, actually store the auth copy in
 # the varnishtest files. Use the magic of sed to put it into the documentation.
 #
-#tmpfile=/tmp/foo$RANDOM
-tmpfile=/tmp/foo
+tmpfile=/tmp/foo$RANDOM
 
-# stuff to put into the section
-sed -n '/varnish v1 -vcl+backend/,/start/p' tests/073-example3.vtc > $tmpfile
-sed -i '/${projectdir}\/..\//d' $tmpfile
-# remove first and last line of file. todo: learn more sed to do this more smoothly.
-tail -n+2 $tmpfile | head -n-1 > $tmpfile.2; mv $tmpfile.2 $tmpfile
 
-sed -e '/... example3-start/ q' INSTALL.rst > $tmpfile.orig.top
-echo -e "VCL::\n" >> $tmpfile.orig.top
-sed -n '/... example3-end/,$p' INSTALL.rst  >$tmpfile.orig.below
+transform() {
+    f=$1
+    # stuff to put into the section
+    sed -n '/varnish v1 -vcl+backend/,/start/p' tests/$f.vtc > $tmpfile
+    sed -i 's/${projectdir}\/..\///' $tmpfile
+    # remove first and last line of file. todo: learn more sed to do this more smoothly.
+    tail -n+2 $tmpfile | head -n-1 > $tmpfile.2; mv $tmpfile.2 $tmpfile
+    sed -e "/... $f-start/ q" INSTALL.rst > $tmpfile.orig.top
+    echo -e "VCL::\n" >> $tmpfile.orig.top
+    sed -n "/... $f-end/,\$p" INSTALL.rst  >$tmpfile.orig.below
+    cat $tmpfile.orig.top $tmpfile $tmpfile.orig.below > INSTALL.rst
+    rm $tmpfile $tmpfile.orig.top $tmpfile.orig.below
+}
 
-cat $tmpfile.orig.top $tmpfile $tmpfile.orig.below > /tmp/fooNEW
-echo $tmpfile
-
+transform 073-example3
