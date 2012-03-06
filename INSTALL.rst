@@ -133,6 +133,7 @@ If everything else fails, you can add the device type as a GET argument.
 
 The same Vary trickery from Example 2 must be added here also.
 
+... example3-start
 VCL::
 
     # override the header before it is sent to the backend
@@ -166,6 +167,7 @@ VCL::
         unset req.http.X-get-devicetype;
     }
 
+... example3-end
 
 
 Testing tools
