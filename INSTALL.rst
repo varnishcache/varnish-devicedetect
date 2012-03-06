@@ -140,20 +140,20 @@ The same Vary trickery from Example 2 must be added here also.
 ... 073-example3-start
 VCL::
 
-    # override the header before it is sent to the backend
-    sub add_get_devicetype { 
-        if (req.http.X-UA-Device && req.method == "GET") {
-            unset req.http.X-get-devicetype;
-            if (bereq.url !~ "\?") {
+    include "devicedetect.vcl";
+    sub vcl_recv { 
+        call devicedetect; 
+        if ((req.http.X-UA-Device) && (req.request == "GET")) {
+            # if there are existing GET arguments;
+            if (req.url ~ "\?") {
                 set req.http.X-get-devicetype = "&devicetype=" + req.http.X-UA-Device;
             } else { 
                 set req.http.X-get-devicetype = "?devicetype=" + req.http.X-UA-Device;
             }
-            set bereq.url = bereq.url + req.http.X-get-devicetype;
+            set req.url = req.url + req.http.X-get-devicetype;
+            unset req.http.X-get-devicetype;
         }
     }
-    sub vcl_miss { call add_get_devicetype; }
-    sub vcl_pass { call add_get_devicetype; }
 
     # rewrite the response from the backend
     sub vcl_fetch {
@@ -161,14 +161,16 @@ VCL::
             if (beresp.http.Vary) { set beresp.http.Vary = beresp.http.Vary + ", User-Agent"; }
             else { set beresp.http.Vary = "User-Agent"; }
             # if the backend returns a redirect (think missing trailing slash), we
-            # will potentially show the extra address to the client. we don't want
+            # will potentially show the extra argument to the client. we don't want
             # that.
-            # if the backend reorders the get parameters, you may need to be smarter here. (? and & ordering)
+            # if the backend reorders the GET parameters, you may need to be smarter here. (? and & ordering)
             if (beresp.status == 301 || beresp.status == 302 || beresp.status == 303) {
-                set beresp.http.location = regsub(beresp.http.location, req.http.X-get-devicetype, "");
+                set beresp.http.location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
             }
+
+            # comment this out if you don't want the client to know your classification
+            set beresp.http.X-UA-Device = req.http.X-UA-Device;
         }
-        unset req.http.X-get-devicetype;
     }
 
 ... 073-example3-end
