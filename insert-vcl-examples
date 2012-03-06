@@ -13,12 +13,13 @@ transform() {
     sed -i 's/${projectdir}\/..\///' $tmpfile
     # remove first and last line of file. todo: learn more sed to do this more smoothly.
     tail -n+2 $tmpfile | head -n-1 > $tmpfile.2; mv $tmpfile.2 $tmpfile
-    sed -e "/... $f-start/ q" INSTALL.rst > $tmpfile.orig.top
+    sed -e "/.. $f-start/ q" INSTALL.rst > $tmpfile.orig.top
     echo -e "VCL::\n" >> $tmpfile.orig.top
-    sed -n "/... $f-end/,\$p" INSTALL.rst  >$tmpfile.orig.below
+    sed -n "/.. $f-end/,\$p" INSTALL.rst  >$tmpfile.orig.below
     cat $tmpfile.orig.top $tmpfile $tmpfile.orig.below > INSTALL.rst
     rm $tmpfile $tmpfile.orig.top $tmpfile.orig.below
 }
 
-transform 073-example3
+transform 065-redir-mobile
 transform 072-example2
+transform 073-example3
