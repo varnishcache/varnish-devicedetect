@@ -104,7 +104,7 @@ Example 2: Normalize the User-Agent string
 ''''''''''''''''''''''''''''''''''''''''''
 
 Another way of signaling the device type is to override or normalize the
-User-Agent header sent to the backend::
+User-Agent header sent to the backend:
 
     User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 --> User-Agent: mobile-android
 
