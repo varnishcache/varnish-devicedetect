@@ -7,8 +7,9 @@ server s1 {
 
 varnish v1 -vcl+backend {
     include "${projectdir}/../devicedetect.vcl";
-    sub vcl_recv { 
-        call devicedetect; 
+    sub vcl_recv { call devicedetect; }
+
+    sub append_ua {
         if ((req.http.X-UA-Device) && (req.request == "GET")) {
             # if there are existing GET arguments;
             if (req.url ~ "\?") {
@@ -20,6 +21,10 @@ varnish v1 -vcl+backend {
             unset req.http.X-get-devicetype;
         }
     }
+
+    # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
+    sub vcl_miss { call append_ua; }
+    sub vcl_pass { call append_ua; }
 
     # Handle redirects, otherwise standard Vary handling code from previous examples.
     sub vcl_fetch {
