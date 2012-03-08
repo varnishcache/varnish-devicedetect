@@ -13,13 +13,13 @@ The tricks involved are:
 3. Modify any response from the backend to add missing Vary headers, so Varnish' internal handling of this kicks in.
 4. Modify output sent to the client so any caches outside our control don't serve the wrong content.
 
-All this while still making sure that we only get 1 cache object per URL per device class.
+All this while still making sure that we only get 1 cached object per URL per device class.
 
 
 Example 1: Send HTTP header to backend
 ''''''''''''''''''''''''''''''''''''''
 
-The basic case is that Varnish add the X-UA-Device HTTP header on the 
+The basic case is that Varnish adds the X-UA-Device HTTP header on the 
 backend requests, and the backend mentions in the response Vary header that the
 content is dependant on this header. 
 
@@ -30,17 +30,7 @@ VCL::
 
     include "devicedetect.vcl";
     sub vcl_recv { call devicedetect; }
-
-    sub append_ua_device {
-        if (req.http.X-UA-Device) { 
-            set bereq.http.X-UA-Device = req.http.X-UA-Device; }
-    }
-
-    # This must be done in vcl_miss and vcl_pass, before any backend request is
-    # actually sent. vcl_fetch runs after the request to the backend has
-    # completed.
-    sub vcl_miss { call append_ua_device; }
-    sub vcl_pass { call append_ua_device; }
+    # req.http.X-UA-Device is copied by Varnish into bereq.http.X-UA-Device
 
     # so, this is a bit conterintuitive. The backend creates content based on the normalized User-Agent,
     # but we use Vary on X-UA-Device so Varnish will use the same cached object for all U-As that map to
@@ -131,8 +121,9 @@ The client itself does not see this classification, only the backend request is 
 VCL::
 
     include "devicedetect.vcl";
-    sub vcl_recv { 
-        call devicedetect; 
+    sub vcl_recv { call devicedetect; }
+
+    sub append_ua {
         if ((req.http.X-UA-Device) && (req.request == "GET")) {
             # if there are existing GET arguments;
             if (req.url ~ "\?") {
@@ -144,6 +135,10 @@ VCL::
             unset req.http.X-get-devicetype;
         }
     }
+
+    # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
+    sub vcl_miss { call append_ua; }
+    sub vcl_pass { call append_ua; }
 
     # Handle redirects, otherwise standard Vary handling code from previous examples.
     sub vcl_fetch {
