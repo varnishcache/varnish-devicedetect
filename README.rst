@@ -53,7 +53,10 @@ These similar efforts for User-Agent insights are known to us:
 * http://deviceatlas.com/ (commercial)
 * http://openddr.org/ (free)
 
-Varnish Software has a commerical offering for Deviceatlas lookup VMOD. Contact sales@varnish-software.com. 
+Varnish Software has a commerical offering for Deviceatlas lookup VMOD. Contact sales@varnish-software.com for inquiries and quotes. Read more at:
+
+    https://www.varnish-cache.org/vmod/deviceatlas-mobile-detection
+
 
 There is an open source project for using OpenDDR in Varnish: 
 
