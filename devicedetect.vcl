@@ -1,6 +1,6 @@
 #
 # detectdevice.vcl - regex based device detection for Varnish
-# http://github.com/lkarsten/varnish-devicedetect/
+# http://github.com/varnish/varnish-devicedetect/
 #
 # Author: Lasse Karstensen <lasse@varnish-software.com>
 
@@ -8,7 +8,12 @@ sub devicedetect {
     unset req.http.X-UA-Device;
     set req.http.X-UA-Device = "pc";
 
-    if    (req.http.User-Agent ~ "(?i)ip(hone|od)") { set req.http.X-UA-Device = "mobile-iphone"; }
+    if (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|)bot" ||
+	req.http.User-Agent ~ "(?i)(baidu|symantec)spider" ||
+	req.http.User-Agent ~ "(?i)scanner" ||
+	req.http.User-Agent ~ "(?i)(web)crawler") {
+	set req.http.X-UA-Device = "bot"; }
+    elsif (req.http.User-Agent ~ "(?i)ip(hone|od)") { set req.http.X-UA-Device = "mobile-iphone"; }
     elsif (req.http.User-Agent ~ "(?i)ipad")        { set req.http.X-UA-Device = "tablet-ipad"; }
     # how do we differ between an android phone and an android tablet?
     # http://stackoverflow.com/questions/5341637/how-do-detect-android-tablets-in-general-useragent
@@ -53,8 +58,7 @@ sub devicedetect {
 	req.http.User-Agent ~ "(?i)240x320" ||
 	req.http.User-Agent ~ "(?i)avantgo") { 
         set req.http.X-UA-Device = "mobile-generic";
-    }
-
+    } 
     # handle overrides
     if (req.http.Cookie ~ "(i?)X-UA-Device-force") {
         # ;?? means zero or one ;, non-greedy to match the first.
