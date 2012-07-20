@@ -16,5 +16,7 @@ bot	Wotbox/2.01 (+http://www.wotbox.com/bot/)
 bot	SAMSUNG-SGH-E250/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 UP.Browser/6.2.3.3.c.1.101 (GUI) MMP/2.0 (compatible; Googlebot-Mobile/2.1; +http://www.google.com/bot.html)
 bot	Mozilla/5.0 (compatible; AhrefsBot/3.1; +http://ahrefs.com/robot/)
 
-desktop	Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)
+pc	Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)
 bot	Baiduspider+(+http://www.baidu.com/search/spider.htm)
+mobile-iphone	AppleCoreMedia/1.0.0.9B206 (iPhone; U; CPU OS 5_1_1 like Mac OS X; en_us)
+
