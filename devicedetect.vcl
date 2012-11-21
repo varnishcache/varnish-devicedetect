@@ -17,14 +17,14 @@ sub devicedetect {
     elsif (req.http.User-Agent ~ "(?i)ipad")        { set req.http.X-UA-Device = "tablet-ipad"; }
     # how do we differ between an android phone and an android tablet?
     # http://stackoverflow.com/questions/5341637/how-do-detect-android-tablets-in-general-useragent
-    elsif (req.http.User-Agent ~ "(?i)android.*(mobile|mini)") { set req.http.X-UA-Device = "mobile-android"; }       
+    elsif (req.http.User-Agent ~ "(?i)android.*(mobile|mini)") { set req.http.X-UA-Device = "mobile-android"; }
     # android 3/honeycomb was just about tablet-only, and any phones will probably handle a bigger page layout.
     elsif (req.http.User-Agent ~ "(?i)android 3")              { set req.http.X-UA-Device = "tablet-android"; }
     # may very well give false positives towards android tablets. Suggestions welcome.
     elsif (req.http.User-Agent ~ "(?i)android")         { set req.http.X-UA-Device = "tablet-android"; }
 
     elsif (req.http.User-Agent ~ "^HTC" ||
-        req.http.User-Agent ~ "Fennec" || 
+        req.http.User-Agent ~ "Fennec" ||
         req.http.User-Agent ~ "IEMobile" ||
         req.http.User-Agent ~ "BlackBerry" ||
         req.http.User-Agent ~ "SymbianOS.*AppleWebKit" ||
@@ -56,14 +56,17 @@ sub devicedetect {
 	req.http.User-Agent ~ "(?i)eudoraweb" ||
 	req.http.User-Agent ~ "(?i)htc" ||
 	req.http.User-Agent ~ "(?i)240x320" ||
-	req.http.User-Agent ~ "(?i)avantgo") { 
+	req.http.User-Agent ~ "(?i)avantgo") {
         set req.http.X-UA-Device = "mobile-generic";
-    } 
+    }
     # handle overrides
     if (req.http.Cookie ~ "(i?)X-UA-Device-force") {
         # ;?? means zero or one ;, non-greedy to match the first.
         set req.http.X-UA-Device = regsub(req.http.Cookie, "(?i).*X-UA-Device-force=([^;]+);??.*", "\1");
+        # Clean up the cookie header to allow for caching.
+        set req.http.Cookie = regsuball(req.http.Cookie, "(^|; ) *X-UA-Device-force=[^;]+;? *", "\1");
+        if (req.http.Cookie ~ "^ *$") { unset req.http.Cookie; }
     }
 }
 
-# vim: sw=4:tw=120 # meh
+# vim: sw=4:tw=120
