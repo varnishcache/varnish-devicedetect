@@ -9,7 +9,7 @@ sub devicedetect {
     set req.http.X-UA-Device = "pc";
 
     if (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|)bot" ||
-	req.http.User-Agent ~ "(?i)(baidu|symantec)spider" ||
+	req.http.User-Agent ~ "(?i)(baidu|jike|symantec)spider" ||
 	req.http.User-Agent ~ "(?i)scanner" ||
 	req.http.User-Agent ~ "(?i)(web)crawler") {
 	set req.http.X-UA-Device = "bot"; }
