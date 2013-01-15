@@ -7,7 +7,7 @@ Serve the different content on the same URL
 
 Here are a few examples on how to serve different content to the client based on device classification.
 
-The tricks involved are: 
+The tricks involved are:
 1. Detect the client (pretty simple, just include devicedetect.vcl and call it)
 2. Figure out how to signal the backend what client class this is. This includes for example setting a header, changing a header or even changing the backend request URL.
 3. Modify any response from the backend to add missing Vary headers, so Varnish' internal handling of this kicks in.
@@ -19,9 +19,9 @@ All this while still making sure that we only get 1 cached object per URL per de
 Example 1: Send HTTP header to backend
 ''''''''''''''''''''''''''''''''''''''
 
-The basic case is that Varnish adds the X-UA-Device HTTP header on the 
+The basic case is that Varnish adds the X-UA-Device HTTP header on the
 backend requests, and the backend mentions in the response Vary header that the
-content is dependant on this header. 
+content is dependant on this header.
 
 Everything works out of the box from Varnish' perspective.
 
@@ -220,7 +220,7 @@ Testing tools
 
 There are some tools included for testing and validating your setup.
 
-* backend/example-backend.py 
+* backend/example-backend.py
 * devicedetect-dev.vcl
 
 If you include the -dev.vcl file, you can access /set_ua_device/ to set a
@@ -229,7 +229,7 @@ cookie that overrides the value of X-UA-Device which is sent to the backend.
 
 Example: enable devicedetection, go to /set_ua_device/mobile-iphone .
 Afterwards, access your site as usual. You will now get the content as if your
-browser was an iPhone. 
+browser was an iPhone.
 
 There is an example web server in backend/ that listens on port 5911 and replies
 differently depending on X-UA-Device. Run it with::
@@ -238,7 +238,7 @@ differently depending on X-UA-Device. Run it with::
     ./example_backend.py
 
 Now you can access it through::
-   
+
     http://localhost:5911/devicetest/ , or
     http://localhost:6081/devicetest/ # Change 6081 into your Varnish listening port.
 
