@@ -31,6 +31,7 @@ sub devicedetect {
 		elsif (req.http.User-Agent ~ "(?i)android 3")              { set req.http.X-UA-Device = "tablet-android"; }
 		// May very well give false positives towards android tablets. Suggestions welcome.
 		elsif (req.http.User-Agent ~ "(?i)android")         { set req.http.X-UA-Device = "tablet-android"; }
+		elsif (req.http.User-Agent ~ "Mobile.+Firefox")     { set req.http.X-UA-Device = "mobile-firefoxos"; }
 		elsif (req.http.User-Agent ~ "^HTC" ||
 		    req.http.User-Agent ~ "Fennec" ||
 		    req.http.User-Agent ~ "IEMobile" ||
@@ -69,4 +70,4 @@ sub devicedetect {
 		}
 	}
 }
-
+(
