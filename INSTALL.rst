@@ -8,6 +8,7 @@ Serve the different content on the same URL
 Here are a few examples on how to serve different content to the client based on device classification.
 
 The tricks involved are:
+
 1. Detect the client (pretty simple, just include devicedetect.vcl and call it)
 2. Figure out how to signal the backend what client class this is. This includes for example setting a header, changing a header or even changing the backend request URL.
 3. Modify any response from the backend to add missing Vary headers, so Varnish' internal handling of this kicks in.
