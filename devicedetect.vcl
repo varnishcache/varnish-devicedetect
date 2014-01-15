@@ -58,6 +58,7 @@ sub devicedetect {
 		    req.http.User-Agent ~ "Fennec" ||
 		    req.http.User-Agent ~ "IEMobile" ||
 		    req.http.User-Agent ~ "BlackBerry" ||
+		    req.http.User-Agent ~ "BB10.*Mobile" ||
 		    req.http.User-Agent ~ "SymbianOS.*AppleWebKit" ||
 		    req.http.User-Agent ~ "Opera Mobi") {
 			set req.http.X-UA-Device = "mobile-smartphone";
