@@ -63,10 +63,10 @@ There is an open source project for using OpenDDR in Varnish:
     https://github.com/TheWeatherChannel/dClass
 
 
-Less complete but still useful resources:
+Other open efforts in this field:
 
+* https://github.com/serbanghita/Mobile-Detect
 * https://github.com/codefuze/js-mobile-tablet-redirect
-* https://github.com/serbanghita/Mobile-Detect (PHP class)
 
 
 Contact
