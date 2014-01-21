@@ -51,6 +51,8 @@ sub devicedetect {
 		elsif (req.http.User-Agent ~ "(?i)android.*(mobile|mini)") { set req.http.X-UA-Device = "mobile-android"; }
 		// android 3/honeycomb was just about tablet-only, and any phones will probably handle a bigger page layout.
 		elsif (req.http.User-Agent ~ "(?i)android 3")              { set req.http.X-UA-Device = "tablet-android"; }
+		/* see http://my.opera.com/community/openweb/idopera/ */
+		elsif (req.http.User-Agent ~ "Opera Mobi")                  { set req.http.X-UA-Device = "mobile-smartphone"; }
 		// May very well give false positives towards android tablets. Suggestions welcome.
 		elsif (req.http.User-Agent ~ "(?i)android")         { set req.http.X-UA-Device = "tablet-android"; }
 		elsif (req.http.User-Agent ~ "PlayBook; U; RIM Tablet")         { set req.http.X-UA-Device = "tablet-rim"; }
@@ -63,8 +65,7 @@ sub devicedetect {
 		    req.http.User-Agent ~ "BlackBerry" ||
 		    req.http.User-Agent ~ "BB10.*Mobile" ||
 		    req.http.User-Agent ~ "GT-.*Build/GINGERBREAD" ||
-		    req.http.User-Agent ~ "SymbianOS.*AppleWebKit" ||
-		    req.http.User-Agent ~ "Opera Mobi") {
+		    req.http.User-Agent ~ "SymbianOS.*AppleWebKit") {
 			set req.http.X-UA-Device = "mobile-smartphone";
 		}
 		elsif (req.http.User-Agent ~ "(?i)symbian" ||
