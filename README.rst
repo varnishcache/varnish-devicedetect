@@ -14,21 +14,23 @@ These are explicit not goals for this project:
 * Create a comprehensive set of capabilities per client. We don't want to spend a lot of effort on maintenance.
 * Be perfect. It usually works, but if you need guarantees you should consider the commercial offerings instead.
 
-This project is maintained and updated by the community. If you see any
-false positives or missing strings, fork the git repository and send a
-pull request.
+This project is maintained and updated by the community. If you see any false
+positives or missing strings, fork the git repository and send a pull request.
 
 
 Requirements
 ------------
 
-You need Varnish 3. It may function with some adjustments on previous versions, but you are on your own.
+You need Varnish 3. It may function with some adjustments on previous versions,
+but you are on your own.
 
-It is worth noting that there is no compilation/linking required. This is VCL code only.
+It is worth noting that there is no compilation/linking required. This is VCL
+code only.
 
 Your backends needs to be able to do produce different content based on what
 type of device this is. This can be signalled to the backend through the URL,
-with an extra HTTP header or with a cookie. See the INSTALL.rst file for examples.
+with an extra HTTP header or with a cookie. See the INSTALL.rst file for
+examples.
 
 Use cases
 ---------
@@ -53,7 +55,8 @@ These similar efforts for User-Agent insights are known to us:
 * http://deviceatlas.com/ (commercial)
 * http://openddr.org/ (free)
 
-Varnish Software has a commercial offering for Deviceatlas lookup VMOD. Contact sales@varnish-software.com for inquiries and quotes. Read more at:
+Varnish Software has a commercial offering for DeviceAtlas lookup VMOD. Contact
+<sales@varnish-software.com> for inquiries and quotes. Read more at:
 
     https://www.varnish-cache.org/vmod/deviceatlas-mobile-detection
 
@@ -66,6 +69,7 @@ There is an open source project for using OpenDDR in Varnish:
 Other open efforts in this field:
 
 * https://github.com/serbanghita/Mobile-Detect
+* https://github.com/willemk/varnish-mobiletranslate (Generate VCL from Mobile-Detect data)
 * https://github.com/codefuze/js-mobile-tablet-redirect
 
 
