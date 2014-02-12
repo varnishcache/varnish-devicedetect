@@ -100,7 +100,9 @@ VCL::
                 set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
             }
         }
-        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        # remove comment for testing, be careful to use this in prod
+        # Google might be worried about crafted content
+        # set beresp.http.X-UA-Device = req.http.X-UA-Device;
     }
     sub vcl_deliver {
         if ((req.http.X-UA-Device) && (resp.http.Vary)) {
@@ -158,7 +160,9 @@ VCL::
                 set beresp.http.location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
             }
         }
-        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        # remove comment for testing, be careful to use this in prod
+        # Google might be worried about crafted content
+        # set beresp.http.X-UA-Device = req.http.X-UA-Device;
     }
     sub vcl_deliver {
         if ((req.http.X-UA-Device) && (resp.http.Vary)) {
