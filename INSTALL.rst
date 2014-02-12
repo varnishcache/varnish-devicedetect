@@ -47,8 +47,9 @@ VCL::
                 set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device"; 
             } 
         }
-        # comment this out if you don't want the client to know your classification
-        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        # remove comment for testing, be careful to use this in prod
+        # Google might be worried about crafted content
+        # set beresp.http.X-UA-Device = req.http.X-UA-Device;
     }
 
     # to keep any caches in the wild from serving wrong content to client #2 behind them, we need to
