@@ -6,8 +6,8 @@ device detection going in Varnish Cache. (http://www.varnish-cache.org)
 
 Specific problems we want to solve:
 
-1) detect the most common and easily detected (mobile/tablet) platforms.
-2) provide example VCL for using devicedetect.vcl with your existing VCL.
+1) Detect the most common and easily detected (mobile/tablet) platforms.
+2) Provide example VCL for using devicedetect.vcl with your existing VCL.
 
 These are explicit not goals for this project:
 
@@ -37,8 +37,8 @@ Use cases
 
 The following uses are envisioned for this VCL:
 
-* serve different content per device type on the same URL. This has the upside of not requiring a redirect on slow mobile networks.
-* redirect mobile/tablets to a different URL. (http://example.com/article/1234.html -> http://m.example.com/article/1234.html)
+* Serve different content per device type on the same URL. This has the upside of not requiring a redirect on slow mobile networks.
+* Redirect mobile/tablets to a different URL. (http://example.com/article/1234.html -> http://m.example.com/article/1234.html)
 
 
 Installation
