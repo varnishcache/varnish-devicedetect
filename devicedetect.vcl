@@ -39,7 +39,13 @@ sub devicedetect {
 		/* If the cookie header is now empty, or just whitespace, unset it. */
 		if (req.http.Cookie ~ "^ *$") { unset req.http.Cookie; }
 	} else {
-		if (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|)bot" ||
+                /* how do we identify a Googlebot mobile agent?
+		   https://support.google.com/webmasters/answer/1061943?hl=en */
+                if(req.http.User-Agent ~ "Googlebot-Mobile" ||
+                    (req.http.User-Agent ~ "Googlebot" && req.http.User-Agent ~ "iPhone")) {
+                        set req.http.X-UA-Device = "mobile-bot";
+                }
+                elsif (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|)bot" ||
 		    req.http.User-Agent ~ "(?i)(baidu|jike|symantec)spider" ||
 		    req.http.User-Agent ~ "(?i)scanner" ||
 		    req.http.User-Agent ~ "(?i)(web)crawler") {
