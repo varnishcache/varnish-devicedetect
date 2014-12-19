@@ -29,6 +29,7 @@ varnish v1 -vcl+backend {
             set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
         }
     }
+
 } -start
 
 client c1 {

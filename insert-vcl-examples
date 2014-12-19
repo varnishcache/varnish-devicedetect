@@ -5,6 +5,7 @@
 #
 tmpfile=/tmp/foo$RANDOM
 
+DOCUMENT=INSTALL.rst
 
 transform() {
     f=$1
@@ -13,10 +14,10 @@ transform() {
     sed -i 's/${projectdir}\/..\///' $tmpfile
     # remove first and last line of file. todo: learn more sed to do this more smoothly.
     tail -n+2 $tmpfile | head -n-1 > $tmpfile.2; mv $tmpfile.2 $tmpfile
-    sed -e "/.. $f-start/ q" INSTALL.rst > $tmpfile.orig.top
-    echo -e "VCL::\n" >> $tmpfile.orig.top
-    sed -n "/.. $f-end/,\$p" INSTALL.rst  >$tmpfile.orig.below
-    cat $tmpfile.orig.top $tmpfile $tmpfile.orig.below > INSTALL.rst
+    sed -e "/.. $f-start/ q" $DOCUMENT > $tmpfile.orig.top
+    echo -e "\nVCL::\n" >> $tmpfile.orig.top
+    sed -n "/.. $f-end/,\$p" $DOCUMENT >$tmpfile.orig.below
+    cat $tmpfile.orig.top $tmpfile $tmpfile.orig.below > $DOCUMENT
     rm $tmpfile $tmpfile.orig.top $tmpfile.orig.below
 }
 

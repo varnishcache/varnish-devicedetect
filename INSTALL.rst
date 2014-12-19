@@ -59,6 +59,7 @@ VCL::
             set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
         }
     }
+
 .. 71-example1-end
 
 
@@ -108,6 +109,7 @@ VCL::
             set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
         }
     }
+
 .. 72-example2-end
 
 Example 3: Add the device class as a GET query parameter
@@ -122,6 +124,47 @@ The client itself does not see this classification, only the backend request is 
 .. 73-example3-start
 
 VCL::
+
+    include "devicedetect.vcl";
+    sub vcl_recv { call devicedetect; }
+
+    # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
+    sub vcl_backend_fetch {
+        if ((bereq.http.X-UA-Device) && (bereq.method == "GET")) {
+            # if there are existing GET arguments;
+            if (bereq.url ~ "\?") {
+                set bereq.http.X-get-devicetype = "&devicetype=" + bereq.http.X-UA-Device;
+            } else {
+                set bereq.http.X-get-devicetype = "?devicetype=" + bereq.http.X-UA-Device;
+            }
+            set bereq.url = bereq.url + bereq.http.X-get-devicetype;
+            unset bereq.http.X-get-devicetype;
+        }
+    }
+
+    # Handle redirects, otherwise standard Vary handling code from previous examples.
+    sub vcl_backend_response {
+        if (bereq.http.X-UA-Device) {
+            if (!beresp.http.Vary) { # no Vary at all
+                set beresp.http.Vary = "X-UA-Device";
+            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
+                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
+            }
+
+            # if the backend returns a redirect (think missing trailing slash), we
+            # will potentially show the extra address to the client. we don't want that.
+            # if the backend reorders the get parameters, you may need to be smarter here. (? and & ordering)
+            if (beresp.status == 301 || beresp.status == 302 || beresp.status == 303) {
+                set beresp.http.Location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
+            }
+        }
+        set beresp.http.X-UA-Device = bereq.http.X-UA-Device;
+    }
+    sub vcl_deliver {
+        if ((req.http.X-UA-Device) && (resp.http.Vary)) {
+            set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
+        }
+    }
 
 .. 73-example3-end
 
