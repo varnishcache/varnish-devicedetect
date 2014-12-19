@@ -11,7 +11,7 @@ all: controlset $(TESTS)
 .PHONY: all controlset $(TESTS)
 
 controlset: ../controlset.txt vtc-from-controlset.py
-	./vtc-from-controlset.py > 099-controlset.vtc
+	./vtc-from-controlset.py > 99-controlset.vtc
 
 $(TESTS): controlset
 	${VARNISHTEST} -Dvarnishd=${VARNISHD} -Dprojectdir=$(PWD) $@

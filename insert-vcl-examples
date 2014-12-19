@@ -20,7 +20,7 @@ transform() {
     rm $tmpfile $tmpfile.orig.top $tmpfile.orig.below
 }
 
-transform 065-redir-mobile
-transform 071-example1
-transform 072-example2
-transform 073-example3
+transform 65-redir-mobile
+transform 71-example1
+transform 72-example2
+transform 73-example3
