@@ -5,6 +5,7 @@ prepare a varnishtest test case that verifies the correct classification.
 
 Author: Lasse Karstensen <lkarsten@varnish-software.com>, July 2012
 """
+from sys import argv
 
 HEADER="""varnishtest "automatic test of control set"
 server s1 {
@@ -12,7 +13,7 @@ server s1 {
        txresp
 } -start
 varnish v1 -vcl+backend {
-        include "${projectdir}/../devicedetect.vcl";
+        include "${projectdir}/devicedetect.vcl";
         sub vcl_deliver {
             call devicedetect;
             set resp.http.X-UA-Device = req.http.X-UA-Device;
@@ -25,8 +26,9 @@ client c1 -run
 """
 
 def main():
+    inputfile = argv[1]
     print HEADER
-    for line in open("../controlset.txt"):
+    for line in open(inputfile):
         line = line.strip()
         if line.startswith("#") or len(line) == 0:
             continue

@@ -23,7 +23,7 @@ server s1 {
 } -start
 
 varnish v1 -vcl+backend {
-    include "${projectdir}/../devicedetect.vcl";""" % description
+    include "${projectdir}/devicedetect.vcl";""" % description
 
 def tailer(optional_req):
     s = """} -start
