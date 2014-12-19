@@ -21,7 +21,7 @@ positives or missing strings, fork the git repository and send a pull request.
 Requirements
 ------------
 
-You need Varnish 3. It may function with some adjustments on previous versions,
+You need Varnish 4. It may function with some adjustments on previous versions,
 but you are on your own.
 
 It is worth noting that there is no compilation/linking required. This is VCL
@@ -82,4 +82,4 @@ This project lives on Github:
 
 Feature requests, bug reports and such can be added to the Github issue tracker.
 
-This shiny piece of code is authored by Lasse Karstensen <lasse@varnish-software.com>.
+This shiny piece of code is authored by Lasse Karstensen <lkarsten@varnish-software.com>.

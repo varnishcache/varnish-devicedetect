@@ -1,11 +1,17 @@
-TESTS=*vtc
 
-all: $(TESTS)
+#VARNISHD=/usr/sbin/varnishd
+#VARNISHTEST=/usr/bin/varnishtest
+VARNISHD=/opt/varnish4/sbin/varnishd
+VARNISHTEST=/opt/varnish4/bin/varnishtest
 
-.PHONY: all $(TESTS)
+TESTS=*.vtc
 
-099-controlset.vtc: ../controlset.txt
+all: controlset $(TESTS)
+
+.PHONY: all controlset $(TESTS)
+
+controlset: ../controlset.txt vtc-from-controlset.py
 	./vtc-from-controlset.py > 099-controlset.vtc
 
-*.vtc:
-	/usr/bin/varnishtest -Dvarnishd=/usr/sbin/varnishd -Dprojectdir=$(PWD) $@
+$(TESTS): controlset
+	${VARNISHTEST} -Dvarnishd=${VARNISHD} -Dprojectdir=$(PWD) $@

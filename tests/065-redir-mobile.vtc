@@ -12,14 +12,14 @@ varnish v1 -vcl+backend {
         call devicedetect;
 
         if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
-            error 750 "Moved Temporarily";
+            return(synth(750, "Moved Temporarily"));
         }
     }
-     
-    sub vcl_error {
-        if (obj.status == 750) {
-            set obj.http.Location = "http://m.example.com" + req.url;
-            set obj.status = 302;
+
+    sub vcl_synth {
+        if (resp.status == 750) {
+            set resp.http.Location = "http://m.example.com" + req.url;
+            set resp.status = 302;
             return(deliver);
         }
     }

@@ -24,7 +24,7 @@
 # detectdevice.vcl - regex based device detection for Varnish
 # http://github.com/varnish/varnish-devicedetect/
 #
-# Author: Lasse Karstensen <lasse@varnish-software.com>
+# Author: Lasse Karstensen <lkarsten@varnish-software.com>
 
 sub devicedetect {
 	unset req.http.X-UA-Device;

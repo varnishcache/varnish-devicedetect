@@ -17,16 +17,16 @@ varnish v1 -vcl+backend {
     # If the backend does not mention in Vary that it has crafted special
     # content based on the User-Agent (==X-UA-Device), add it.
     # If your backend does set Vary: User-Agent, you may have to remove that here.
-    sub vcl_fetch {
-        if (req.http.X-UA-Device) {
+    sub vcl_backend_response {
+        if (bereq.http.X-UA-Device) {
             if (!beresp.http.Vary) { # no Vary at all
-                set beresp.http.Vary = "X-UA-Device"; 
+                set beresp.http.Vary = "X-UA-Device";
             } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
-                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device"; 
-            } 
+                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
+            }
         }
         # comment this out if you don't want the client to know your classification
-        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        set beresp.http.X-UA-Device = bereq.http.X-UA-Device;
     }
 
     # to keep any caches in the wild from serving wrong content to client #2 behind them, we need to
@@ -39,11 +39,8 @@ varnish v1 -vcl+backend {
 } -start
 
 client c1 {
-	txreq -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" 
+	txreq -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
 	rxresp
-	#expect bereq.http.User-Agent == "mobile-android"
 	expect resp.http.X-UA-Device == "mobile-android"
 	expect resp.http.Vary == "User-Agent"
-}
-
-client c1 -run
+} -run

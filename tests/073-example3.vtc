@@ -9,26 +9,23 @@ varnish v1 -vcl+backend {
     include "${projectdir}/../devicedetect.vcl";
     sub vcl_recv { call devicedetect; }
 
-    sub append_ua {
-        if ((req.http.X-UA-Device) && (req.request == "GET")) {
+    # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
+    sub vcl_backend_fetch {
+        if ((bereq.http.X-UA-Device) && (bereq.method == "GET")) {
             # if there are existing GET arguments;
-            if (req.url ~ "\?") {
-                set req.http.X-get-devicetype = "&devicetype=" + req.http.X-UA-Device;
-            } else { 
-                set req.http.X-get-devicetype = "?devicetype=" + req.http.X-UA-Device;
+            if (bereq.url ~ "\?") {
+                set bereq.http.X-get-devicetype = "&devicetype=" + bereq.http.X-UA-Device;
+            } else {
+                set bereq.http.X-get-devicetype = "?devicetype=" + bereq.http.X-UA-Device;
             }
-            set req.url = req.url + req.http.X-get-devicetype;
-            unset req.http.X-get-devicetype;
+            set bereq.url = bereq.url + bereq.http.X-get-devicetype;
+            unset bereq.http.X-get-devicetype;
         }
     }
 
-    # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
-    sub vcl_miss { call append_ua; }
-    sub vcl_pass { call append_ua; }
-
     # Handle redirects, otherwise standard Vary handling code from previous examples.
-    sub vcl_fetch {
-        if (req.http.X-UA-Device) {
+    sub vcl_backend_response {
+        if (bereq.http.X-UA-Device) {
             if (!beresp.http.Vary) { # no Vary at all
                 set beresp.http.Vary = "X-UA-Device";
             } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
@@ -39,10 +36,10 @@ varnish v1 -vcl+backend {
             # will potentially show the extra address to the client. we don't want that.
             # if the backend reorders the get parameters, you may need to be smarter here. (? and & ordering)
             if (beresp.status == 301 || beresp.status == 302 || beresp.status == 303) {
-                set beresp.http.location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
+                set beresp.http.Location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
             }
         }
-        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        set beresp.http.X-UA-Device = bereq.http.X-UA-Device;
     }
     sub vcl_deliver {
         if ((req.http.X-UA-Device) && (resp.http.Vary)) {
@@ -53,9 +50,7 @@ varnish v1 -vcl+backend {
 } -start
 
 client c1 {
-	txreq -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" 
+	txreq -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
 	rxresp
 	expect resp.http.X-UA-Device == "mobile-android"
-}
-
-client c1 -run
+} -run

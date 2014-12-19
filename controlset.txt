@@ -1,7 +1,7 @@
-# 
+#
 # This file contains some manually classified user-agents that can be used
 # to test for false positives.
-# 
+#
 # Format: <classification>\t<UA-string>\n
 #
 

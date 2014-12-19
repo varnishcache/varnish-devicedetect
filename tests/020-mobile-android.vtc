@@ -13,7 +13,7 @@ varnish v1 -vcl+backend {
 } -start
 
 client c1 {
-	txreq -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" 
+	txreq -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
 	rxresp
 	expect resp.http.X-UA-Device == "mobile-android"
 
@@ -22,6 +22,5 @@ client c1 {
 	#rxresp
 	#expect resp.http.X-UA-Device == "mobile-android"
 }
-
 
 client c1 -run

@@ -39,17 +39,16 @@ VCL::
     # If the backend does not mention in Vary that it has crafted special
     # content based on the User-Agent (==X-UA-Device), add it.
     # If your backend does set Vary: User-Agent, you may have to remove that here.
-    sub vcl_fetch {
-        if (req.http.X-UA-Device) {
+    sub vcl_backend_response {
+        if (bereq.http.X-UA-Device) {
             if (!beresp.http.Vary) { # no Vary at all
-                set beresp.http.Vary = "X-UA-Device"; 
+                set beresp.http.Vary = "X-UA-Device";
             } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
-                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device"; 
-            } 
+                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
+            }
         }
-        # remove comment for testing, be careful to use this in prod
-        # Google might be worried about crafted content
-        # set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        # comment this out if you don't want the client to know your classification
+        set beresp.http.X-UA-Device = bereq.http.X-UA-Device;
     }
 
     # to keep any caches in the wild from serving wrong content to client #2 behind them, we need to
@@ -88,26 +87,24 @@ VCL::
     sub vcl_recv { call devicedetect; }
 
     # override the header before it is sent to the backend
-    sub vcl_miss { if (req.http.X-UA-Device) { set bereq.http.User-Agent = req.http.X-UA-Device; } }
-    sub vcl_pass { if (req.http.X-UA-Device) { set bereq.http.User-Agent = req.http.X-UA-Device; } }
+    sub vcl_backend_fetch { if (bereq.http.X-UA-Device) { set bereq.http.User-Agent = bereq.http.X-UA-Device; } }
 
     # standard Vary handling code from previous examples.
-    sub vcl_fetch {
-        if (req.http.X-UA-Device) {
+    sub vcl_backend_response {
+        if (bereq.http.X-UA-Device) {
             if (!beresp.http.Vary) { # no Vary at all
                 set beresp.http.Vary = "X-UA-Device";
             } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
                 set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
             }
         }
-        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        set beresp.http.X-UA-Device = bereq.http.X-UA-Device;
     }
     sub vcl_deliver {
         if ((req.http.X-UA-Device) && (resp.http.Vary)) {
             set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
         }
     }
-
 .. 072-example2-end
 
 Example 3: Add the device class as a GET query parameter
@@ -125,26 +122,23 @@ VCL::
     include "devicedetect.vcl";
     sub vcl_recv { call devicedetect; }
 
-    sub append_ua {
-        if ((req.http.X-UA-Device) && (req.request == "GET")) {
+    # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
+    sub vcl_backend_fetch {
+        if ((bereq.http.X-UA-Device) && (bereq.method == "GET")) {
             # if there are existing GET arguments;
-            if (req.url ~ "\?") {
-                set req.http.X-get-devicetype = "&devicetype=" + req.http.X-UA-Device;
-            } else { 
-                set req.http.X-get-devicetype = "?devicetype=" + req.http.X-UA-Device;
+            if (bereq.url ~ "\?") {
+                set bereq.http.X-get-devicetype = "&devicetype=" + bereq.http.X-UA-Device;
+            } else {
+                set bereq.http.X-get-devicetype = "?devicetype=" + bereq.http.X-UA-Device;
             }
-            set req.url = req.url + req.http.X-get-devicetype;
-            unset req.http.X-get-devicetype;
+            set bereq.url = bereq.url + bereq.http.X-get-devicetype;
+            unset bereq.http.X-get-devicetype;
         }
     }
 
-    # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
-    sub vcl_miss { call append_ua; }
-    sub vcl_pass { call append_ua; }
-
     # Handle redirects, otherwise standard Vary handling code from previous examples.
-    sub vcl_fetch {
-        if (req.http.X-UA-Device) {
+    sub vcl_backend_response {
+        if (bereq.http.X-UA-Device) {
             if (!beresp.http.Vary) { # no Vary at all
                 set beresp.http.Vary = "X-UA-Device";
             } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
@@ -155,10 +149,10 @@ VCL::
             # will potentially show the extra address to the client. we don't want that.
             # if the backend reorders the get parameters, you may need to be smarter here. (? and & ordering)
             if (beresp.status == 301 || beresp.status == 302 || beresp.status == 303) {
-                set beresp.http.location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
+                set beresp.http.Location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
             }
         }
-        set beresp.http.X-UA-Device = req.http.X-UA-Device;
+        set beresp.http.X-UA-Device = bereq.http.X-UA-Device;
     }
     sub vcl_deliver {
         if ((req.http.X-UA-Device) && (resp.http.Vary)) {
@@ -202,14 +196,14 @@ VCL::
         call devicedetect;
 
         if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
-            error 750 "Moved Temporarily";
+            return(synth(750, "Moved Temporarily"));
         }
     }
-     
-    sub vcl_error {
-        if (obj.status == 750) {
-            set obj.http.Location = "http://m.example.com" + req.url;
-            set obj.status = 302;
+
+    sub vcl_synth {
+        if (resp.status == 750) {
+            set resp.http.Location = "http://m.example.com" + req.url;
+            set resp.status = 302;
             return(deliver);
         }
     }
