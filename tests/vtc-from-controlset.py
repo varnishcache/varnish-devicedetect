@@ -13,7 +13,10 @@ server s1 {
 } -start
 varnish v1 -vcl+backend {
         include "${projectdir}/../devicedetect.vcl";
-        sub vcl_deliver { class devicedetect; set resp.http.X-UA-Device = req.http.X-UA-Device; }
+        sub vcl_deliver {
+            call devicedetect;
+            set resp.http.X-UA-Device = req.http.X-UA-Device;
+        }
 } -start
 
 client c1 {"""

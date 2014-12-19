@@ -26,12 +26,14 @@ content is dependant on this header.
 
 Everything works out of the box from Varnish' perspective.
 
-.. 71-example1-start
+.. startsnippet-example1
 
 VCL::
 
     include "devicedetect.vcl";
-    sub vcl_recv { call devicedetect; }
+    sub vcl_recv {
+	call devicedetect;
+    }
     # req.http.X-UA-Device is copied by Varnish into bereq.http.X-UA-Device
 
     # so, this is a bit conterintuitive. The backend creates content based on the normalized User-Agent,
@@ -60,7 +62,7 @@ VCL::
         }
     }
 
-.. 71-example1-end
+.. endsnippet-example1
 
 
 Example 2: Normalize the User-Agent string
@@ -83,12 +85,19 @@ This works if you don't need the original header for anything on the backend. A
 possible use for this is for CGI scripts where only a small set of predefined
 headers are (by default) available for the script.
 
-.. 72-example2-start
+
+.. req: txreq -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
+.. req: rxresp
+.. req: expect resp.http.X-UA-Device == "mobile-android"
+.. req: expect resp.http.Vary == "User-Agent"
+.. startsnippet-example2
 
 VCL::
 
     include "devicedetect.vcl";
-    sub vcl_recv { call devicedetect; }
+    sub vcl_recv {
+        call devicedetect;
+    }
 
     # override the header before it is sent to the backend
     sub vcl_backend_fetch { if (bereq.http.X-UA-Device) { set bereq.http.User-Agent = bereq.http.X-UA-Device; } }
@@ -110,7 +119,7 @@ VCL::
         }
     }
 
-.. 72-example2-end
+.. endsnippet-example2
 
 Example 3: Add the device class as a GET query parameter
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -121,12 +130,14 @@ If everything else fails, you can add the device type as a GET argument.
 
 The client itself does not see this classification, only the backend request is changed.
 
-.. 73-example3-start
+.. startsnippet-example3
 
 VCL::
 
     include "devicedetect.vcl";
-    sub vcl_recv { call devicedetect; }
+    sub vcl_recv {
+	call devicedetect;
+    }
 
     # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
     sub vcl_backend_fetch {
@@ -166,18 +177,21 @@ VCL::
         }
     }
 
-.. 73-example3-end
+.. endsnippet-example3
 
 Different backend for mobile clients
 ------------------------------------
 
 If you have a different backend that serves pages for mobile clients, or any
-special needs in VCL, you can use the X-UA-Device header like this::
+special needs in VCL, you can use the X-UA-Device header like the following.
 
+VCL::
+
+    vcl 4.0;
     include "devicedetect.vcl";
 
     backend mobile {
-        .host = "10.0.0.1";
+        .host = "192.0.2.10";
         .port = "80";
     }
 
@@ -185,7 +199,7 @@ special needs in VCL, you can use the X-UA-Device header like this::
         call devicedetect;
 
         if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
-            set req.backend = mobile;
+            set req.backend_hint = mobile;
         }
     }
 
@@ -194,7 +208,11 @@ Redirecting mobile clients
 
 If you want to redirect mobile clients you can use the following snippet.
 
-.. 65-redir-mobile-start
+.. req: txreq -req GET -url /foo -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" -hdr "Host: example.com"
+.. req: rxresp
+.. req: expect resp.status == 302
+.. req: expect resp.http.Location == "http://m.example.com/foo"
+.. startsnippet-redir2
 
 VCL::
 
@@ -215,7 +233,7 @@ VCL::
         }
     }
 
-.. 65-redir-mobile-end
+.. endsnippet-redir2
 
 
 Testing tools
