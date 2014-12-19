@@ -8,7 +8,9 @@ server s1 {
 # this example shows how to normalize the user agent string seen by the backend.
 varnish v1 -vcl+backend {
     include "${projectdir}/../devicedetect.vcl";
-    sub vcl_recv { call devicedetect; }
+    sub vcl_recv {
+	call devicedetect;
+    }
     # req.http.X-UA-Device is copied by Varnish into bereq.http.X-UA-Device
 
     # so, this is a bit conterintuitive. The backend creates content based on the normalized User-Agent,
