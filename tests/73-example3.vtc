@@ -7,7 +7,9 @@ server s1 {
 
 varnish v1 -vcl+backend {
     include "${projectdir}/../devicedetect.vcl";
-    sub vcl_recv { call devicedetect; }
+    sub vcl_recv {
+	call devicedetect;
+    }
 
     # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
     sub vcl_backend_fetch {

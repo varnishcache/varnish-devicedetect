@@ -8,7 +8,9 @@ server s1 {
 # this example shows how to normalize the user agent string seen by the backend.
 varnish v1 -vcl+backend {
     include "${projectdir}/../devicedetect.vcl";
-    sub vcl_recv { call devicedetect; }
+    sub vcl_recv {
+        call devicedetect;
+    }
 
     # override the header before it is sent to the backend
     sub vcl_backend_fetch { if (bereq.http.X-UA-Device) { set bereq.http.User-Agent = bereq.http.X-UA-Device; } }
