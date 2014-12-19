@@ -61,6 +61,7 @@ sub devicedetect {
 		elsif (req.http.User-Agent ~ "PlayBook; U; RIM Tablet")         { set req.http.X-UA-Device = "tablet-rim"; }
 		elsif (req.http.User-Agent ~ "hp-tablet.*TouchPad")         { set req.http.X-UA-Device = "tablet-hp"; }
 		elsif (req.http.User-Agent ~ "Kindle/3")         { set req.http.X-UA-Device = "tablet-kindle"; }
+		elsif (req.http.User-Agent ~ "Touch.+Tablet PC")            { set req.http.X-UA-Device = "tablet-microsoft"; }
 		elsif (req.http.User-Agent ~ "Mobile.+Firefox")     { set req.http.X-UA-Device = "mobile-firefoxos"; }
 		elsif (req.http.User-Agent ~ "^HTC" ||
 		    req.http.User-Agent ~ "Fennec" ||
