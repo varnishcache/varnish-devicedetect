@@ -203,6 +203,13 @@ VCL::
         }
     }
 
+    sub vcl_hash {
+        if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
+            hash_data(req.http.X-UA-Device);
+    }
+
+
+
 Redirecting mobile clients
 --------------------------
 
