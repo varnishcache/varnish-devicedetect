@@ -26,7 +26,8 @@ content is dependant on this header.
 
 Everything works out of the box from Varnish' perspective.
 
-.. 071-example1-start
+.. 71-example1-start
+
 VCL::
 
     include "devicedetect.vcl";
@@ -58,7 +59,8 @@ VCL::
             set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
         }
     }
-.. 071-example1-end
+.. 71-example1-end
+
 
 Example 2: Normalize the User-Agent string
 ''''''''''''''''''''''''''''''''''''''''''
@@ -80,7 +82,8 @@ This works if you don't need the original header for anything on the backend. A
 possible use for this is for CGI scripts where only a small set of predefined
 headers are (by default) available for the script.
 
-.. 072-example2-start
+.. 72-example2-start
+
 VCL::
 
     include "devicedetect.vcl";
@@ -105,7 +108,7 @@ VCL::
             set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
         }
     }
-.. 072-example2-end
+.. 72-example2-end
 
 Example 3: Add the device class as a GET query parameter
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -116,51 +119,11 @@ If everything else fails, you can add the device type as a GET argument.
 
 The client itself does not see this classification, only the backend request is changed.
 
-.. 073-example3-start
+.. 73-example3-start
+
 VCL::
 
-    include "devicedetect.vcl";
-    sub vcl_recv { call devicedetect; }
-
-    # do this after vcl_hash, so all Vary-ants can be purged in one go. (avoid ban()ing)
-    sub vcl_backend_fetch {
-        if ((bereq.http.X-UA-Device) && (bereq.method == "GET")) {
-            # if there are existing GET arguments;
-            if (bereq.url ~ "\?") {
-                set bereq.http.X-get-devicetype = "&devicetype=" + bereq.http.X-UA-Device;
-            } else {
-                set bereq.http.X-get-devicetype = "?devicetype=" + bereq.http.X-UA-Device;
-            }
-            set bereq.url = bereq.url + bereq.http.X-get-devicetype;
-            unset bereq.http.X-get-devicetype;
-        }
-    }
-
-    # Handle redirects, otherwise standard Vary handling code from previous examples.
-    sub vcl_backend_response {
-        if (bereq.http.X-UA-Device) {
-            if (!beresp.http.Vary) { # no Vary at all
-                set beresp.http.Vary = "X-UA-Device";
-            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
-                set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
-            }
-
-            # if the backend returns a redirect (think missing trailing slash), we
-            # will potentially show the extra address to the client. we don't want that.
-            # if the backend reorders the get parameters, you may need to be smarter here. (? and & ordering)
-            if (beresp.status == 301 || beresp.status == 302 || beresp.status == 303) {
-                set beresp.http.Location = regsub(beresp.http.location, "[?&]devicetype=.*$", "");
-            }
-        }
-        set beresp.http.X-UA-Device = bereq.http.X-UA-Device;
-    }
-    sub vcl_deliver {
-        if ((req.http.X-UA-Device) && (resp.http.Vary)) {
-            set resp.http.Vary = regsub(resp.http.Vary, "X-UA-Device", "User-Agent");
-        }
-    }
-
-.. 073-example3-end
+.. 73-example3-end
 
 Different backend for mobile clients
 ------------------------------------
@@ -188,7 +151,8 @@ Redirecting mobile clients
 
 If you want to redirect mobile clients you can use the following snippet.
 
-.. 065-redir-mobile-start
+.. 65-redir-mobile-start
+
 VCL::
 
     include "devicedetect.vcl";
@@ -208,7 +172,7 @@ VCL::
         }
     }
 
-.. 065-redir-mobile-end
+.. 65-redir-mobile-end
 
 
 Testing tools
