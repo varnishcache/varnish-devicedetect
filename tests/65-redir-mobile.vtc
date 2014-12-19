@@ -1,11 +1,10 @@
-varnishtest "Test varnish-devicedetect"
+varnishtest "Show example of per-device-class redirects."
 
 server s1 {
        rxreq
        txresp
 } -start
 
-# this example shows how to normalize the user agent string seen by the backend.
 varnish v1 -vcl+backend {
     include "${projectdir}/../devicedetect.vcl";
     sub vcl_recv {
@@ -27,19 +26,15 @@ varnish v1 -vcl+backend {
 } -start
 
 client c1 {
-	txreq -req GET -url /foo -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
+	txreq -req GET -url /foo -hdr "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2; nb-no; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" -hdr "Host: example.com"
 	rxresp
 	expect resp.status == 302
 	expect resp.http.Location == "http://m.example.com/foo"
-}
+} -run
 
 client c2 {
-	txreq -req GET -url /foo
+	txreq -req GET -url /foo -hdr "Host: example.com"
 	rxresp
 	expect resp.status == 200
-	expect resp.http.Location != "http://m.example.com/foo"
-}
-
-
-client c1 -run
-client c2 -run
+	expect resp.http.Location == <undef>
+} -run
