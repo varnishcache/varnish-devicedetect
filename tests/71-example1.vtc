@@ -1,8 +1,9 @@
 varnishtest "Test varnish-devicedetect"
 
 server s1 {
-       rxreq
-       txresp
+	rxreq
+	expect req.http.X-UA-Device == "mobile-android"
+	txresp
 } -start
 
 # this example shows how to normalize the user agent string seen by the backend.
