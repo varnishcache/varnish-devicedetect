@@ -1,9 +1,11 @@
 #!/usr/bin/python
 #
-# This is a simple web server that takes the X-UA-Device header into
-# consideration when producing content.
+# This is a simple web server (listening to port 5911) that takes the
+# X-UA-Device header into consideration when producing content.
 #
+# Author: Lasse Karstensen <lkarsten@varnish-software.com>, February 2012.
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from socket import AF_INET6
 from pprint import pformat
 import datetime
 
@@ -23,11 +25,11 @@ TAIL_CONTENT="""
 <li><a href="/set_ua_device/">unset override cookie</a><br/>
 </ul>
 </body></html>
-""" 
+"""
 
 class requesthandler(BaseHTTPRequestHandler):
     # http://docs.python.org/library/basehttpserver.html#BaseHTTPServer.BaseHTTPRequestHandler
-    def do_GET(self): 
+    def do_GET(self):
         # remove any GET-args
         if "?" in self.path:
             self.path = self.path[0:self.path.index("?")]
@@ -47,7 +49,7 @@ class requesthandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "text/html")
         self.end_headers()
         self.wfile.write(HEAD_CONTENT)
-        
+
         if not self.headers.get("X-UA-Device"):
             self.wfile.write("<strong>Your request does not have a X-UA-Device header set.</strong>")
         else:
@@ -59,7 +61,10 @@ class requesthandler(BaseHTTPRequestHandler):
 
 def main():
     server_address = ('', 5911)
+    HTTPServer.allow_reuse_address = True
+    HTTPServer.address_family = AF_INET6
     httpd = HTTPServer(server_address, requesthandler)
+    print "Listening on %s:%s." % server_address
     httpd.serve_forever()
 
 if __name__ == "__main__":
