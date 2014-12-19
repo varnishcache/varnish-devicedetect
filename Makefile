@@ -3,16 +3,16 @@ VARNISHD := $(shell which varnishd)
 VARNISHTEST := $(shell which varnishtest)
 TESTS=tests/*.vtc
 
-check: $(TESTS)
+.PHONY: check initial
+all: initial check
 
-.PHONY: check controlset snippets $(TESTS)
-
-controlset: controlset.txt tests/vtc-from-controlset.py
+initial: controlset.txt tests/vtc-from-controlset.py INSTALL.rst tests/vtc-from-snippets.py
 	tests/vtc-from-controlset.py controlset.txt > tests/99-controlset.vtc
-
-snippets: INSTALL.rst tests/vtc-from-snippets.py
 	find tests/ -name snippet-\*vtc -exec rm "{}" \;
 	cd tests && ./vtc-from-snippets.py ../INSTALL.rst
 
-$(TESTS): controlset snippets
+check: $(TESTS)
+
+$(TESTS): devicedetect.vcl initial
 	${VARNISHTEST} -Dvarnishd=${VARNISHD} -Dprojectdir=$(PWD) $@
+

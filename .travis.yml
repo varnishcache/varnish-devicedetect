@@ -9,4 +9,5 @@ before_install:
   - sudo apt-get install varnish
 
 script:
+  - make initial
   - make check
