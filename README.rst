@@ -53,7 +53,7 @@ Similar efforts
 These similar efforts for User-Agent insights are known to us:
 
 * http://deviceatlas.com/ (commercial)
-* http://openddr.org/ (free)
+* https://github.com/OpenDDRdotORG (free)
 
 Varnish Software has a commercial offering for DeviceAtlas lookup VMOD. Contact
 <sales@varnish-software.com> for inquiries and quotes. Read more at:
