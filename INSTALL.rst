@@ -46,7 +46,7 @@ VCL::
         if (bereq.http.X-UA-Device) {
             if (!beresp.http.Vary) { # no Vary at all
                 set beresp.http.Vary = "X-UA-Device";
-            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
+            } elsif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
                 set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
             }
         }
@@ -107,7 +107,7 @@ VCL::
         if (bereq.http.X-UA-Device) {
             if (!beresp.http.Vary) { # no Vary at all
                 set beresp.http.Vary = "X-UA-Device";
-            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
+            } elsif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
                 set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
             }
         }
@@ -158,7 +158,7 @@ VCL::
         if (bereq.http.X-UA-Device) {
             if (!beresp.http.Vary) { # no Vary at all
                 set beresp.http.Vary = "X-UA-Device";
-            } elseif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
+            } elsif (beresp.http.Vary !~ "X-UA-Device") { # add to existing Vary
                 set beresp.http.Vary = beresp.http.Vary + ", X-UA-Device";
             }
 
