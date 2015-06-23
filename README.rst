@@ -2,7 +2,7 @@ Device detection in Varnish
 ===========================
 
 The goal of this VCL set is to provide a simple & easy way of getting
-device detection going in Varnish Cache. (http://www.varnish-cache.org)
+device detection going in Varnish Cache. (https://www.varnish-cache.org)
 
 Specific problems we want to solve:
 
@@ -52,7 +52,7 @@ Similar efforts
 
 These similar efforts for User-Agent insights are known to us:
 
-* http://deviceatlas.com/ (commercial)
+* https://deviceatlas.com/ (commercial)
 * https://github.com/OpenDDRdotORG (free)
 
 Varnish Software has a commercial offering for DeviceAtlas lookup VMOD. Contact
@@ -78,7 +78,7 @@ Contact
 
 This project lives on Github:
 
-    http://github.com/varnish/varnish-devicedetect/
+    https://github.com/varnish/varnish-devicedetect/
 
 Feature requests, bug reports and such can be added to the Github issue tracker.
 
