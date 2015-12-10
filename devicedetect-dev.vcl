@@ -27,15 +27,14 @@ sub vcl_recv {
 sub vcl_synth {
 	if (resp.status == 701 || resp.status == 702) {
 		if (resp.status == 702) {
-			set resp.status = 200;
 			set resp.http.Set-Cookie = "X-UA-Device-force=expiring; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-		} else {
 			set resp.status = 200;
-			set resp.http.Set-Cookie = "X-UA-Device-force=" + resp.response + "; Path=/;";
+		} else {
+			set resp.http.Set-Cookie = "X-UA-Device-force=" + resp.reason + "; Path=/;";
+			set resp.status = 200;
 		}
 		set resp.http.Content-Type = "text/html; charset=utf-8";
 		synthetic {"<html><body><h1>OK, Cookie updated</h1><a href='/devicetest/'>/devicetest/</a></body></html>"};
-		set resp.response = "OK";
 		return(deliver);
 	}
 }
