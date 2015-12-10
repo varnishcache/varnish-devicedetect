@@ -35,7 +35,6 @@ sub vcl_synth {
 		}
 		set resp.http.Content-Type = "text/html; charset=utf-8";
 		synthetic {"<html><body><h1>OK, Cookie updated</h1><a href='/devicetest/'>/devicetest/</a></body></html>"};
-		set resp.http.response = "OK";
 		return(deliver);
 	}
 }
