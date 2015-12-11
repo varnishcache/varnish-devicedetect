@@ -1,6 +1,33 @@
 Device detection in Varnish
 ===========================
 
+
+Maintainers wanted
+------------------
+
+This VCL set was originally collected from some Norwegian newspapers and other
+media sites in 2011/2012. It serves as a good starting point for doing device
+detection in Varnish.
+
+**We are currently looking for a new maintainer.**
+
+Work load is maybe one pull request per month, as well as figuring out where to
+take the VCL file set over time.
+
+The main issue with the current maintenance level is that we (Varnish Software)
+don't run any big applications on Varnish production ourselves, so we don't see
+the client mix changing. This means that the VCL set most likely will be less
+and less useful in real life, as old crap and assumptions are left to rot in
+here.
+
+Any new maintainer(s) should probably be running this VCL in production, or do
+similar/related work close to backend applications. Contact
+<lkarsten@varnish-software.com> to discuss this further.
+
+
+Introduction
+------------
+
 The goal of this VCL set is to provide a simple & easy way of getting
 device detection going in Varnish Cache. (https://www.varnish-cache.org)
 
@@ -21,8 +48,8 @@ positives or missing strings, fork the git repository and send a pull request.
 Requirements
 ------------
 
-You need Varnish 4. It may function with some adjustments on previous versions,
-but you are on your own.
+You need a recent Varnish release. It may function with some adjustments on
+previous versions, but you are on your own.
 
 It is worth noting that there is no compilation/linking required. This is VCL
 code only.
@@ -54,23 +81,10 @@ These similar efforts for User-Agent insights are known to us:
 
 * https://deviceatlas.com/ (commercial)
 * https://github.com/OpenDDRdotORG (free)
-
-Varnish Software has a commercial offering for DeviceAtlas lookup VMOD. Contact
-<sales@varnish-software.com> for inquiries and quotes. Read more at:
-
-    https://www.varnish-cache.org/vmod/deviceatlas-mobile-detection
-
-
-There is an open source project for using OpenDDR in Varnish:
-
-    https://github.com/TheWeatherChannel/dClass
-
-
-Other open efforts in this field:
-
+* https://www.varnish-cache.org/vmod/deviceatlas-mobile-detection (commercial VMOD for Deviceatlas by Varnish Software)
+* https://github.com/TheWeatherChannel/dClass
 * https://github.com/serbanghita/Mobile-Detect
 * https://github.com/willemk/varnish-mobiletranslate (Generate VCL from Mobile-Detect data)
-* https://github.com/codefuze/js-mobile-tablet-redirect
 
 
 Contact
@@ -82,4 +96,4 @@ This project lives on Github:
 
 Feature requests, bug reports and such can be added to the Github issue tracker.
 
-This shiny piece of code is authored by Lasse Karstensen <lkarsten@varnish-software.com>.
+This code is currently maintained by Lasse Karstensen <lkarsten@varnish-software.com>.
