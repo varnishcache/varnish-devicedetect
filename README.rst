@@ -2,14 +2,14 @@ Device detection in Varnish
 ===========================
 
 
-Maintainers wanted
-------------------
+Maintainer(s) wanted
+--------------------
 
 This VCL set was originally collected from some Norwegian newspapers and other
 media sites in 2011/2012. It serves as a good starting point for doing device
 detection in Varnish.
 
-**We are currently looking for a new maintainer.**
+**We are currently looking for new maintainer(s).**
 
 Work load is maybe one pull request per month, as well as figuring out where to
 take the VCL file set over time.
