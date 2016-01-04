@@ -92,7 +92,7 @@ Contact
 
 This project lives on Github:
 
-    https://github.com/varnish/varnish-devicedetect/
+    https://github.com/varnishcache/varnish-devicedetect/
 
 Feature requests, bug reports and such can be added to the Github issue tracker.
 

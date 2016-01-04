@@ -22,7 +22,7 @@
 # SUCH DAMAGE.
 #
 # detectdevice.vcl - regex based device detection for Varnish
-# https://github.com/varnish/varnish-devicedetect/
+# https://github.com/varnishcache/varnish-devicedetect/
 #
 # Author: Lasse Karstensen <lkarsten@varnish-software.com>
 
