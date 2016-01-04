@@ -1,30 +1,6 @@
 Device detection in Varnish
 ===========================
 
-
-Maintainer(s) wanted
---------------------
-
-This VCL set was originally collected from some Norwegian newspapers and other
-media sites in 2011/2012. It serves as a good starting point for doing device
-detection in Varnish.
-
-**We are currently looking for new maintainer(s).**
-
-Work load is maybe one pull request per month, as well as figuring out where to
-take the VCL file set over time.
-
-The main issue with the current maintenance level is that we (Varnish Software)
-don't run any big applications on Varnish production ourselves, so we don't see
-the client mix changing. This means that the VCL set most likely will be less
-and less useful in real life, as old crap and assumptions are left to rot in
-here.
-
-Any new maintainer(s) should probably be running this VCL in production, or do
-similar/related work close to backend applications. Contact
-<lkarsten@varnish-software.com> to discuss this further.
-
-
 Introduction
 ------------
 
@@ -96,4 +72,4 @@ This project lives on Github:
 
 Feature requests, bug reports and such can be added to the Github issue tracker.
 
-This code is currently maintained by Lasse Karstensen <lkarsten@varnish-software.com>.
+This code is currently maintained by Christopher Slowe <me@keysersosa.com>.
