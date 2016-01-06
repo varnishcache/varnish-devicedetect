@@ -42,7 +42,7 @@ sub devicedetect {
         if (req.http.User-Agent ~ "\(compatible; Googlebot-Mobile/2.1; \+http://www.google.com/bot.html\)" ||
             (req.http.User-Agent ~ "iPhone" && req.http.User-Agent ~ "\(compatible; Googlebot/2.1; \+http://www.google.com/bot.html")) {
             set req.http.X-UA-Device = "mobile-bot"; }
-		elsif (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|)bot" ||
+		elsif (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|seznam|)bot" ||
 		    req.http.User-Agent ~ "(?i)(baidu|jike|symantec)spider" ||
 		    req.http.User-Agent ~ "(?i)scanner" ||
 		    req.http.User-Agent ~ "(?i)(web)crawler") {
