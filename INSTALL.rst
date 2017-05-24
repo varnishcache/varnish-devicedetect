@@ -202,6 +202,19 @@ VCL::
             set req.backend_hint = mobile;
         }
     }
+    
+    sub vcl_hash {
+        hash_data(req.url);
+        if (req.http.host) {
+            hash_data(req.http.host);
+        } else {
+            hash_data(server.ip);
+        }
+        if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
+            hash_data("mobile");
+        }
+        return (hash);
+    }
 
     sub vcl_hash {
         if (req.http.X-UA-Device ~ "^mobile" || req.http.X-UA-device ~ "^tablet") {
