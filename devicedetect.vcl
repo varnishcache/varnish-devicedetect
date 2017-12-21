@@ -46,6 +46,7 @@ sub devicedetect {
 		elsif (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|seznam|)bot" ||
 		    req.http.User-Agent ~ "(?i)(baidu|jike|symantec)spider" ||
 		    req.http.User-Agent ~ "(?i)scanner" ||
+		    req.http.User-Agent ~ "(?i)slurp" ||
 		    req.http.User-Agent ~ "(?i)(web)crawler") {
 			set req.http.X-UA-Device = "bot"; }
 		elsif (req.http.User-Agent ~ "(?i)ipad")        { set req.http.X-UA-Device = "tablet-ipad"; }
