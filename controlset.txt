@@ -12,6 +12,7 @@ bot	Wotbox/2.01 (+http://www.wotbox.com/bot/)
 bot	Mozilla/5.0 (compatible; AhrefsBot/3.1; +http://ahrefs.com/robot/)
 bot	Baiduspider+(+http://www.baidu.com/search/spider.htm)
 bot	Mozilla/5.0 (compatible; SeznamBot/3.2; +http://fulltext.sblog.cz/)
+bot	Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)
 
 # from https://developers.google.com/webmasters/mobile-sites/references/googlebot
 mobile-bot	DoCoMo/2.0 N905i(c100;TB;W24H16) (compatible; Googlebot-Mobile/2.1; +http://www.google.com/bot.html)
