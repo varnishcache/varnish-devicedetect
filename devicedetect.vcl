@@ -77,7 +77,6 @@ sub devicedetect {
 			set req.http.X-UA-Device = "mobile-smartphone";
 		}
 		elsif (req.http.User-Agent ~ "(?i)symbian" ||
-		    req.http.User-Agent ~ "(?i)^sonyericsson" ||
 		    req.http.User-Agent ~ "(?i)^nokia" ||
 		    req.http.User-Agent ~ "(?i)^samsung" ||
 		    req.http.User-Agent ~ "(?i)^lg" ||
@@ -95,7 +94,6 @@ sub devicedetect {
 		    req.http.User-Agent ~ "(?i)portalmmm" ||
 		    req.http.User-Agent ~ "(?i)proxinet" ||
 		    req.http.User-Agent ~ "(?i)sonyericsson" ||
-		    req.http.User-Agent ~ "(?i)symbian" ||
 		    req.http.User-Agent ~ "(?i)windows\ ?ce" ||
 		    req.http.User-Agent ~ "(?i)winwap" ||
 		    req.http.User-Agent ~ "(?i)eudoraweb" ||
