@@ -1,4 +1,6 @@
-# Copyright (c) 2012-2014 Varnish Software AS
+#
+# Copyright (c) 2016-2018 Varnish Cache project
+# Copyright (c) 2012-2016 Varnish Software AS
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -24,7 +26,7 @@
 # detectdevice.vcl - regex based device detection for Varnish
 # https://github.com/varnishcache/varnish-devicedetect/
 #
-# Author: Lasse Karstensen <lkarsten@varnish-software.com>
+# Original author: Lasse Karstensen <lkarsten@varnish-software.com>
 
 sub devicedetect {
 	unset req.http.X-UA-Device;
