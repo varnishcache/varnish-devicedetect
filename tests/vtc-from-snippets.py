@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Pick out the examples from the installation documentation and
 build a VTC test case around it.
@@ -60,9 +60,9 @@ def parse(inputfile):
                 assert section is not None
                 assert line.startswith(".. endsnippet-%s" % section)
             except AssertionError:
-                print section, line
-                print buf
-                print req
+                print(section, line)
+                print(buf)
+                print(req)
                 raise
 
             yield section, "".join(buf), "   ".join(req)
@@ -82,6 +82,6 @@ if __name__ == "__main__":
     rstfile = argv[1]
     for name, testsnippet, req in parse(rstfile):
         with open("snippet-%s.vtc" % name, "w+") as fp:
-            print >>fp, header(name)
-            print >>fp, testsnippet
-            print >>fp, tailer(req)
+            print(header(name), file=fp)
+            print(testsnippet, file=fp)
+            print(tailer(req), file=fp)

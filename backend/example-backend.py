@@ -1,9 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # This is a simple web server (listening to port 5911) that takes the
 # X-UA-Device header into consideration when producing content.
 #
 # Author: Lasse Karstensen <lkarsten@varnish-software.com>, February 2012.
+#
+from __future__ import print_function
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from socket import AF_INET6
 from pprint import pformat
@@ -59,13 +61,10 @@ class requesthandler(BaseHTTPRequestHandler):
         self.wfile.write("<p>This page was generated %s.</p>" % (datetime.datetime.now().isoformat()))
         self.wfile.write(TAIL_CONTENT)
 
-def main():
+if __name__ == "__main__":
     server_address = ('', 5911)
     HTTPServer.allow_reuse_address = True
     HTTPServer.address_family = AF_INET6
     httpd = HTTPServer(server_address, requesthandler)
-    print "Listening on %s:%s." % server_address
+    print("Listening on %s:%s." % server_address)
     httpd.serve_forever()
-
-if __name__ == "__main__":
-    main()

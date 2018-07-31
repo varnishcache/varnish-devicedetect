@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Parse the list of manually classified User-Agent strings and
 prepare a varnishtest test case that verifies the correct classification.
@@ -25,9 +25,9 @@ TAILER="""}
 client c1 -run
 """
 
-def main():
+if __name__ == "__main__":
     inputfile = argv[1]
-    print HEADER
+    print(HEADER)
     for line in open(inputfile):
         line = line.strip()
         if line.startswith("#") or len(line) == 0:
@@ -36,10 +36,8 @@ def main():
 
         classid, uastring = line.split("\t", 1)
 
-        print "\ttxreq -hdr \"User-Agent: %s\"" % uastring
-        print "\trxresp"
-        print "\texpect resp.http.X-UA-Device == \"%s\"\n" % classid
-    print TAILER
+        print("\ttxreq -hdr \"User-Agent: %s\"" % uastring)
+        print("\trxresp")
+        print("\texpect resp.http.X-UA-Device == \"%s\"\n" % classid)
+    print(TAILER)
 
-if __name__ == "__main__":
-    main()
