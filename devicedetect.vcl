@@ -94,8 +94,6 @@ sub devicedetect {
 		    req.http.User-Agent ~ "(?i)playstation portable" ||
 		    req.http.User-Agent ~ "(?i)portalmmm" ||
 		    req.http.User-Agent ~ "(?i)proxinet" ||
-		    req.http.User-Agent ~ "(?i)sonyericsson" ||
-		    req.http.User-Agent ~ "(?i)symbian" ||
 		    req.http.User-Agent ~ "(?i)windows\ ?ce" ||
 		    req.http.User-Agent ~ "(?i)winwap" ||
 		    req.http.User-Agent ~ "(?i)eudoraweb" ||
