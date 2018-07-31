@@ -1,12 +1,12 @@
 language: c
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq apt-transport-https python-docutils
-  - curl https://repo.varnish-cache.org/debian/GPG-key.txt | sudo apt-key add -
-  - echo "deb https://repo.varnish-cache.org/ubuntu/ precise varnish-4.0" | sudo tee /etc/apt/sources.list.d/varnish-cache.list
-  - sudo apt-get -qq update
-  - sudo apt-get install varnish
+  - sudo apt-get update
+  - sudo apt-get install -y apt-transport-https python-docutils curl
+  - curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add -
+  - echo "deb https://packagecloud.io/varnishcache/varnish41/ubuntu/ precise main" | sudo tee /etc/apt/sources.list.d/varnish-cache.list
+  - sudo apt-get update
+  - sudo apt-get install -y varnish varnish-dev
 
 script:
   - make initial
