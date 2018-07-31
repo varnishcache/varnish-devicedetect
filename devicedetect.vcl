@@ -45,6 +45,8 @@ sub devicedetect {
             set req.http.X-UA-Device = "mobile-bot"; }
 		elsif (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|seznam|)bot" ||
 		    req.http.User-Agent ~ "(?i)(baidu|jike|symantec)spider" ||
+		    req.http.User-Agent ~ "(?i)pingdom" ||
+		    req.http.User-Agent ~ "(?i)facebookexternalhit" ||
 		    req.http.User-Agent ~ "(?i)scanner" ||
 		    req.http.User-Agent ~ "(?i)slurp" ||
 		    req.http.User-Agent ~ "(?i)(web)crawler") {
@@ -95,8 +97,6 @@ sub devicedetect {
 		    req.http.User-Agent ~ "(?i)playstation portable" ||
 		    req.http.User-Agent ~ "(?i)portalmmm" ||
 		    req.http.User-Agent ~ "(?i)proxinet" ||
-		    req.http.User-Agent ~ "(?i)sonyericsson" ||
-		    req.http.User-Agent ~ "(?i)symbian" ||
 		    req.http.User-Agent ~ "(?i)windows\ ?ce" ||
 		    req.http.User-Agent ~ "(?i)winwap" ||
 		    req.http.User-Agent ~ "(?i)eudoraweb" ||
