@@ -48,6 +48,7 @@ sub devicedetect {
 		    req.http.User-Agent ~ "(?i)pingdom" ||
 		    req.http.User-Agent ~ "(?i)facebookexternalhit" ||
 		    req.http.User-Agent ~ "(?i)scanner" ||
+		    req.http.User-Agent ~ "(?i)slurp" ||
 		    req.http.User-Agent ~ "(?i)(web)crawler") {
 			set req.http.X-UA-Device = "bot"; }
 		elsif (req.http.User-Agent ~ "(?i)ipad")        { set req.http.X-UA-Device = "tablet-ipad"; }
