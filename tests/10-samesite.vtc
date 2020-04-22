@@ -1,0 +1,69 @@
+varnishtest "Basic functionality of same-site feature detection"
+
+server s1 -repeat 2 {
+       rxreq
+       txresp -hdr "Set-Cookie: FirstPartyCookie=foobar"
+
+       rxreq
+       txresp -hdr "Set-Cookie: ThirdPartyCookie=foobar"
+
+       rxreq
+       txresp -hdr "Set-Cookie: ThirdPartyCookie=foobar;Path=/;Secure"
+
+       rxreq
+       txresp -hdr "Set-Cookie: ThirdPartyCookie=foobar;SameSite=lax"
+} -start
+
+varnish v1 -vcl+backend {
+        include "${projectdir}/samesite.vcl";
+        sub vcl_deliver {
+        	call samesite;
+                
+                if (resp.http.set-cookie &&
+                resp.http.set-cookie ~ "ThirdPartyCookie=" &&
+                resp.http.set-cookie !~ "SameSite" ) {
+
+                        if (req.http.X-UA-SameSiteNone == "supported") {
+                                set resp.http.Set-Cookie = resp.http.set-cookie + ";SameSite=None";
+                        }
+	        }
+        }
+} -start
+
+# test with browser which does not support SameSite=None
+client c1 {
+        txreq -hdr "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3904.130"
+	rxresp
+	expect resp.http.Set-Cookie == "FirstPartyCookie=foobar"
+
+        txreq -hdr "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3904.130"
+	rxresp
+	expect resp.http.Set-Cookie == "ThirdPartyCookie=foobar"
+
+        txreq -hdr "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3904.130"
+	rxresp
+	expect resp.http.Set-Cookie == "ThirdPartyCookie=foobar;Path=/;Secure"
+
+        txreq -hdr "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3904.130"
+	rxresp
+	expect resp.http.Set-Cookie == "ThirdPartyCookie=foobar;SameSite=lax"
+} -run
+
+# test with browser which support SameSite=None
+client c1 {
+        txreq -hdr "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.3904.130"
+	rxresp
+	expect resp.http.Set-Cookie == "FirstPartyCookie=foobar"
+
+        txreq -hdr "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.3904.130"
+	rxresp
+	expect resp.http.Set-Cookie == "ThirdPartyCookie=foobar;SameSite=None"
+
+        txreq -hdr "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.3904.130"
+	rxresp
+	expect resp.http.Set-Cookie == "ThirdPartyCookie=foobar;Path=/;Secure;SameSite=None"
+
+        txreq -hdr "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.3904.130"
+	rxresp
+	expect resp.http.Set-Cookie == "ThirdPartyCookie=foobar;SameSite=lax"
+} -run
