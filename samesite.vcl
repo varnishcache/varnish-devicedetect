@@ -1,8 +1,8 @@
 sub samesite {
         # See list here:
         # https://www.chromium.org/updates/same-site/incompatible-clients
-	unset req.http.X-UA-SameSiteNone;
-	set req.http.X-UA-SameSiteNone = "supported";
+        unset req.http.X-UA-SameSiteNone;
+        set req.http.X-UA-SameSiteNone = "supported";
 
         # Versions of Chrome from Chrome 51 to Chrome 66 (inclusive on both ends). These Chrome versions will reject a cookie with `SameSite=None`
         if (req.http.user-agent ~ "Chrom(e|ium)" &&
