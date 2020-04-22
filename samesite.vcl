@@ -9,7 +9,7 @@ sub samesite {
         (req.http.user-agent ~ "Chrom[^ \/]+\/5[1-9][\.\d]*" ||
         req.http.user-agent ~ "Chrom[^ \/]+\/6[0-6][\.\d]*")) {
                 set req.http.X-UA-SameSiteNone = "unsupported";
-    }
+        }
 
     # Versions of UC Browser on Android prior to version 12.13.2. Older versions will reject a cookie with `SameSite=None`
     if (req.http.user-agent ~ "UCBrowser\/" && (req.http.user-agent ~ "UCBrowser\/[0-9]\.\d+\.\d+[\.\d]*" || req.http.user-agent ~ "UCBrowser\/1[0-1]\.\d+\.\d+[\.\d]*" ||
