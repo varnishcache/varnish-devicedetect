@@ -47,13 +47,17 @@ sub devicedetect {
             (req.http.User-Agent ~ "(Android|iPhone)" && req.http.User-Agent ~ "\(compatible.?; Googlebot/2.1.?; \+http://www.google.com/bot.html") ||
 			(req.http.User-Agent ~ "(iPhone|Windows Phone)" && req.http.User-Agent ~ "\(compatible; bingbot/2.0; \+http://www.bing.com/bingbot.htm")) {
             set req.http.X-UA-Device = "mobile-bot"; }
-		elsif (req.http.User-Agent ~ "(?i)(ads|google|bing|msn|yandex|baidu|ro|career|seznam|)bot" ||
-		    req.http.User-Agent ~ "(?i)(baidu|jike|symantec)spider" ||
+		elsif (req.http.User-Agent ~ "(?i)bot" ||
+		    req.http.User-Agent ~ "(?i)spider" ||
 		    req.http.User-Agent ~ "(?i)pingdom" ||
-		    req.http.User-Agent ~ "(?i)facebookexternalhit" ||
+		    req.http.User-Agent ~ "(?i)ia_archiver" ||
 		    req.http.User-Agent ~ "(?i)scanner" ||
+		    req.http.User-Agent ~ "(?i)facebook" ||
+		    req.http.User-Agent ~ "(?i)google" ||
+		    req.http.User-Agent ~ "(?i)gtmetrix" ||
+		    req.http.User-Agent ~ "(?i)lighthouse" ||
 		    req.http.User-Agent ~ "(?i)slurp" ||
-		    req.http.User-Agent ~ "(?i)(web)crawler") {
+		    req.http.User-Agent ~ "(?i)crawl") {
 			set req.http.X-UA-Device = "bot"; }
 		elsif (req.http.User-Agent ~ "(?i)ipad")        { set req.http.X-UA-Device = "tablet-ipad"; }
 		elsif (req.http.User-Agent ~ "(?i)ip(hone|od)") { set req.http.X-UA-Device = "mobile-iphone"; }
