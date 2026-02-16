@@ -108,6 +108,14 @@ sub devicedetect {
 		    req.http.User-Agent ~ "(?i)240x320" ||
 		    req.http.User-Agent ~ "(?i)avantgo") {
 			set req.http.X-UA-Device = "mobile-generic";
+		} elseif (req.http.User-Agent ~ "(?i)HbbTV" ) {
+			set req.http.X-UA-Device = "tv-hbbtv";
+		} elseif (req.http.User-Agent ~ "(?i)SmartTV" ||
+			req.http.User-Agent ~ "(?i)tv2next" ||
+			req.http.User-Agent ~ "(?i)tbrowser") {
+			set req.http.X-UA-Device = "tv-generic";
 		}
 	}
+
+	set req.http.X-UA-Screen = regsub(req.http.X-UA-Device, "^([^-]+)-.*$", "\1");
 }
