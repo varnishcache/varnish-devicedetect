@@ -2,7 +2,7 @@
 IMPORTANT - THIS REPOSITORY HAS MOVED
 =====================================
 
-New location: https://code.vinyl-cache.org/vinyl-cache/vinyl-cache
+New location: https://code.vinyl-cache.org/vinyl-cache/vinyl-devicedetect
 
 The main branch changes from ``master`` to ``main``.
 
