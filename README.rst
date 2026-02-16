@@ -1,3 +1,13 @@
+=====================================
+IMPORTANT - THIS REPOSITORY HAS MOVED
+=====================================
+
+New location: https://code.vinyl-cache.org/vinyl-cache/vinyl-cache
+
+The main branch changes from ``master`` to ``main``.
+
+Read this: https://vinyl-cache.org/organization/moving.html
+
 Device detection in Varnish
 ===========================
 
